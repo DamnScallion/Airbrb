@@ -10,10 +10,11 @@ const SearchBar = () => {
       sx={{
         display: 'flex',
         alignItems: 'center',
-        width: 400,
+        maxWidth: 600,
         border: '1px solid #ddd',
         borderRadius: 20,
         mx: 1,
+        flex: 3,
       }}
     >
       <IconButton sx={{ px: '10px' }}>

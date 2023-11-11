@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import config from '../config.json';
+import config from 'config.json';
 import { storeToken, storeEmail, clearLocalStorage } from './helper'
 
 const BACKEND_PORT = config.BACKEND_PORT;

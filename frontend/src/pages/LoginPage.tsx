@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Container, Typography } from '@mui/material';
-import Header from '../components/header/Header';
-import LoginForm from '../components/form/LoginForm';
+import Header from 'components/header/Header';
+import LoginForm from 'components/form/LoginForm';
 
 const LoginPage = () => {
   return (

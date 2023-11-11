@@ -15,7 +15,7 @@ const Header = ({ showSearchBar = false, pageTitle }: HeaderProps) => {
       <Container sx={{ maxWidth: 'xl' }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', minHeight: '80px' }}>
           <AirbnbLogo />
-          {showSearchBar ? <SearchBar /> : pageTitle && <Typography variant='h4'>{pageTitle}</Typography>}
+          {showSearchBar ? <SearchBar /> : pageTitle && <Typography sx={{ flex: 3, textAlign: 'center' }} variant='h4'>{pageTitle}</Typography>}
           <NavBar />
         </Box>
       </Container>

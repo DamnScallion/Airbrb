@@ -1,7 +1,7 @@
 import React from 'react';
-import Header from '../components/header/Header';
+import Header from 'components/header/Header';
 import { Box, Container, Typography } from '@mui/material';
-import RegisterForm from '../components/form/RegisterForm';
+import RegisterForm from 'components/form/RegisterForm';
 
 const RegisterPage = () => {
   return (

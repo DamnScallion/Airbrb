@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
-import { getToken } from '../utils/helper';
+import { getToken } from 'utils/helper';
 
 interface AuthContextType {
   isLoggedIn: boolean;

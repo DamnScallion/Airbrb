@@ -1,9 +1,9 @@
 import React from 'react'
 import { Box, TextField, Button, Typography, Link } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthProvider'
-import { getErrorMessage } from '../../utils/helper'
-import { login } from '../../utils/apiService';
+import { useAuth } from 'contexts/AuthProvider'
+import { getErrorMessage } from 'utils/helper'
+import { login } from 'utils/apiService';
 import { useSnackbar } from 'notistack';
 
 const LoginForm = () => {

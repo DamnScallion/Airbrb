@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 const AirbnbLogo = () => {
   const navigate = useNavigate();
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer' }} onClick={() => navigate('/')}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer', flex: 1 }} onClick={() => navigate('/')}>
       <FaAirbnb size={40} color={ blue[700] } />
       <Typography sx={{ ml: 1, fontWeight: 'bold', display: { xs: 'none', md: 'block' } }} color={ blue[700] } variant='h5' >
         airbnb

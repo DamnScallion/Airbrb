@@ -11,7 +11,7 @@ export const MessageProvider: React.FC<MessageProviderProps> = ({ children }) =>
       preventDuplicate={false}
       maxSnack={3}
       autoHideDuration={3000}
-      anchorOrigin = {{ vertical: 'top', horizontal: 'center' }}
+      anchorOrigin = {{ vertical: 'bottom', horizontal: 'left' }}
     >
       {children}
     </SnackbarProvider>

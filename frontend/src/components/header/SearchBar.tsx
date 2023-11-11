@@ -19,7 +19,7 @@ const SearchBar = () => {
       <IconButton sx={{ px: '10px' }}>
         <BiSearch />
       </IconButton>
-      <InputBase sx={{ flex: 1 }} placeholder='Any where?' />
+      <InputBase id='search-input' name='search-input' sx={{ flex: 1 }} placeholder='Any where?' />
       <IconButton type='submit' sx={{ px: '10px' }}>
         <VscSettings />
       </IconButton>

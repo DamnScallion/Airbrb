@@ -3,9 +3,9 @@ import { Box, Button, Stack, Menu, MenuItem, Avatar } from '@mui/material';
 import { FiMenu } from 'react-icons/fi'
 import { FaCircleUser } from 'react-icons/fa6'
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthProvider';
-import { getErrorMessage, getEmail } from '../utils/helper'
-import { logout } from '../utils/apiService';
+import { useAuth } from '../../contexts/AuthProvider';
+import { getErrorMessage, getEmail } from '../../utils/helper'
+import { logout } from '../../utils/apiService';
 import { useSnackbar } from 'notistack';
 
 const NavBar = () => {
@@ -59,8 +59,6 @@ const NavBar = () => {
                 >
                   <Stack direction='row' spacing={1}>
                   <FiMenu size={24} color={'#000'} opacity={0.5} />
-                    {/* <FaCircleUser size={24} color={'#000'} opacity={0.5} /> */}
-                  {/* <Avatar sx={{ height: 24, width: 24, color: '#fff', backgroundColor: '#000' }} >N</Avatar> */}
                   {avatarLetter
                     ? <Avatar sx={{ height: 24, width: 24, bgcolor: '#000' }}>{avatarLetter}</Avatar>
                     : <FaCircleUser size={24} color={'#000'} opacity={0.5} />}

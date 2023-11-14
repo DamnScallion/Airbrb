@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import config from '../config.json';
+import config from 'config.json';
 import { storeToken, storeEmail, clearLocalStorage } from './helper'
 
 const BACKEND_PORT = config.BACKEND_PORT;
@@ -52,6 +52,22 @@ export const register = async (email: string, password: string, name: string) =>
     storeToken(data.token);
     storeEmail(email);
     return true;
+  } else {
+    throw new Error(error);
+  }
+};
+
+export const addListing = async (title: string, address: any, price: number, thumbnail: string, metadata: any) => {
+  const { data, error } = await apiCall('/listings/new', 'POST', {
+    title,
+    address,
+    price,
+    thumbnail,
+    metadata
+  });
+
+  if (data && !error) {
+    return data;
   } else {
     throw new Error(error);
   }

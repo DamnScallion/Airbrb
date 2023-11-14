@@ -1,7 +1,7 @@
 import React from 'react'
-import Header from '../components/Header'
+import Header from 'components/header/Header'
 
-const IndexPage = () => {
+const IndexPage: React.FC = () => {
   return (
     <div>
       <Header showSearchBar={true} />

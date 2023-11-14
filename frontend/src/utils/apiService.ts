@@ -56,3 +56,19 @@ export const register = async (email: string, password: string, name: string) =>
     throw new Error(error);
   }
 };
+
+export const addListing = async (title: string, address: any, price: number, thumbnail: string, metadata: any) => {
+  const { data, error } = await apiCall('/listings/new', 'POST', {
+    title,
+    address,
+    price,
+    thumbnail,
+    metadata
+  });
+
+  if (data && !error) {
+    return data;
+  } else {
+    throw new Error(error);
+  }
+};

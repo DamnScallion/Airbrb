@@ -6,7 +6,7 @@ import { register } from 'utils/apiService';
 import { getErrorMessage } from 'utils/helper'
 import { useSnackbar } from 'notistack';
 
-const RegisterForm = () => {
+const RegisterForm: React.FC = () => {
   const { setIsLoggedIn } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
 

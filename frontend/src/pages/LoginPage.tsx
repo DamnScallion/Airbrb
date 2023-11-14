@@ -3,7 +3,7 @@ import { Box, Container, Typography } from '@mui/material';
 import Header from 'components/header/Header';
 import LoginForm from 'components/form/LoginForm';
 
-const LoginPage = () => {
+const LoginPage: React.FC = () => {
   return (
     <Box>
       <Header showSearchBar={false} pageTitle='Login' />

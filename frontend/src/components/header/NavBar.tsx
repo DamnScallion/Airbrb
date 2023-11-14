@@ -8,7 +8,7 @@ import { getErrorMessage, getEmail } from 'utils/helper'
 import { logout } from 'utils/apiService';
 import { useSnackbar } from 'notistack';
 
-const NavBar = () => {
+const NavBar: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -44,7 +44,7 @@ const NavBar = () => {
   const avatarLetter = email ? email[0]?.toUpperCase() : null;
 
   return (
-    <Box sx={{ flex: 1 }}>
+    <Box sx={{ flex: 1, textAlign: 'center' }}>
       {isLoggedIn
         ? (
             <>

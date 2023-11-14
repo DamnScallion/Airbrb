@@ -3,7 +3,7 @@ import { InputBase, IconButton, Box } from '@mui/material';
 import { BiSearch } from 'react-icons/bi';
 import { VscSettings } from 'react-icons/vsc';
 
-const SearchBar = () => {
+const SearchBar: React.FC = () => {
   return (
     <Box
       component='form'

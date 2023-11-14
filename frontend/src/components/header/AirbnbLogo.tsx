@@ -4,7 +4,7 @@ import React from 'react'
 import { FaAirbnb } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 
-const AirbnbLogo = () => {
+const AirbnbLogo: React.FC = () => {
   const navigate = useNavigate();
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer', flex: 1 }} onClick={() => navigate('/')}>

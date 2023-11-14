@@ -6,7 +6,7 @@ import { getErrorMessage } from 'utils/helper'
 import { login } from 'utils/apiService';
 import { useSnackbar } from 'notistack';
 
-const LoginForm = () => {
+const LoginForm: React.FC = () => {
   const { setIsLoggedIn } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();

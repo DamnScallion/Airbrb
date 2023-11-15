@@ -15,6 +15,7 @@ export interface ListingMetadata {
   totalBedNum: number;
   bedrooms: Bedroom[];
   amenities: string[];
+  images?: string[];
 }
 
 export interface ListingSubmission {

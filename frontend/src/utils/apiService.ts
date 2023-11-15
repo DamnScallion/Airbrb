@@ -93,6 +93,13 @@ export const addListing = async (listingData: ListingSubmission): Promise<any> =
   }
 };
 
+export const updateListing = async (listingId: number, listingData: ListingSubmission): Promise<void> => {
+  const { error } = await apiCall(`/listings/${listingId}`, 'PUT', listingData);
+  if (error) {
+    throw new Error(error);
+  }
+};
+
 export const removeListing = async (listingId: number): Promise<void> => {
   const { error } = await apiCall(`/listings/${listingId}`, 'DELETE');
   if (error) {

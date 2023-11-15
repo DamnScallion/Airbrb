@@ -3,6 +3,7 @@ import { Box, Card, CardActions, CardContent, CardMedia, Button, Typography, use
 import { Listing } from 'utils/dataType'
 import { useTheme } from '@mui/material/styles';
 import { BiSolidBed, BiSolidBath } from 'react-icons/bi'
+import { useNavigate } from 'react-router-dom';
 
 interface HostingCardProps {
   data: Listing;
@@ -24,6 +25,7 @@ const HostingCard: React.FC<HostingCardProps> = ({ data, onDelete }) => {
 
   const theme = useTheme();
   const isXSmall = useMediaQuery(theme.breakpoints.down('sm'));
+  const navigate = useNavigate();
   return (
     <Card sx={{ width: '100%', mt: 3, ...(isXSmall ? {} : { display: 'flex' }) }}>
       <CardMedia
@@ -60,7 +62,7 @@ const HostingCard: React.FC<HostingCardProps> = ({ data, onDelete }) => {
         </CardContent>
         <CardActions sx={{ justifyContent: 'end' }}>
           <Button size='small' color='error' onClick={() => onDelete(Number(id))}>Delete</Button>
-          <Button size='small'>Edit</Button>
+          <Button size='small' onClick={() => navigate(`/listing/edit/${String(id)}`)}>Edit</Button>
         </CardActions>
       </Box>
     </Card>

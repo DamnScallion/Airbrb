@@ -6,11 +6,7 @@ import { MdNavigateBefore, MdAdd, MdUpload, MdHighlightOff } from 'react-icons/m
 import { red } from '@mui/material/colors';
 import { addListing } from 'utils/apiService';
 import { useSnackbar } from 'notistack';
-
-interface Bedroom {
-  bedNum: number;
-  bedType: string;
-}
+import { Bedroom, ListingSubmission, Address } from 'utils/dataType';
 
 const ListingCreateForm: React.FC = () => {
   const [title, setTitle] = useState('');
@@ -72,38 +68,23 @@ const ListingCreateForm: React.FC = () => {
 
   const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    let totalBedNum = 0
-    bedrooms.forEach((bedroom) => {
-      totalBedNum += Number(bedroom.bedNum)
-    })
-    const data = {
-      title,
-      address: {
-        street,
-        city,
-        country
-      },
-      price: Number(price),
-      thumbnail,
-      metadata: {
-        bathroomNum: Number(bathroomNum),
-        propertyType,
-        totalBedNum,
-        bedrooms,
-        amenities,
-      }
-    }
+
+    const totalBedNum = bedrooms.reduce((acc, curr) => acc + Number(curr.bedNum), 0);
+
+    const address: Address = { street, city, country };
+    const metadata = { bathroomNum: Number(bathroomNum), propertyType, totalBedNum, bedrooms, amenities };
+
+    const listingData: ListingSubmission = { title, address, price: Number(price), thumbnail, metadata };
+
     try {
-      const res = await addListing(data.title, data.address, data.price, data.thumbnail, data.metadata);
-      console.log('res', res)
-      const msg = 'Successfully Created a Listing.'
-      enqueueSnackbar(msg, { variant: 'success' })
+      const res = await addListing(listingData);
+      console.log('res', res);
+      navigate('/hosting');
+      enqueueSnackbar('Successfully Created a Listing.', { variant: 'success' });
     } catch (error) {
-      const msg = getErrorMessage(error)
-      enqueueSnackbar(msg, { variant: 'error' })
+      enqueueSnackbar(getErrorMessage(error), { variant: 'error' });
     }
-    console.log(data)
-  }
+  };
 
   return (
     <Container component='main' maxWidth='md'>

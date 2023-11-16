@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import config from 'config.json';
 import { storeToken, storeEmail, clearLocalStorage } from './helper'
+import { ListingSubmission, Listing, Availability } from './dataType';
 
 const BACKEND_PORT = config.BACKEND_PORT;
 
@@ -24,6 +25,10 @@ export const apiCall = async (url: string, method: string, body?: any) => {
     return { error: error.message };
   }
 };
+
+/***************************************************************
+                       User Auth Functions
+***************************************************************/
 
 export const login = async (email: string, password: string) => {
   const { data, error } = await apiCall('/user/auth/login', 'POST', { email, password });
@@ -57,18 +62,61 @@ export const register = async (email: string, password: string, name: string) =>
   }
 };
 
-export const addListing = async (title: string, address: any, price: number, thumbnail: string, metadata: any) => {
-  const { data, error } = await apiCall('/listings/new', 'POST', {
-    title,
-    address,
-    price,
-    thumbnail,
-    metadata
-  });
+/***************************************************************
+                       Listing Functions
+***************************************************************/
 
+export const getAllListings = async (): Promise<Listing[]> => {
+  const { data, error } = await apiCall('/listings', 'GET');
+  if (data && !error) {
+    return data.listings as Listing[];
+  } else {
+    throw new Error(error);
+  }
+};
+
+export const getListingDetails = async (listingId: string | number): Promise<Listing> => {
+  const { data, error } = await apiCall(`/listings/${listingId}`, 'GET');
+  if (data && !error) {
+    return data.listing as Listing;
+  } else {
+    throw new Error(error);
+  }
+};
+
+export const addListing = async (listingData: ListingSubmission): Promise<any> => {
+  const { data, error } = await apiCall('/listings/new', 'POST', listingData);
   if (data && !error) {
     return data;
   } else {
+    throw new Error(error);
+  }
+};
+
+export const updateListing = async (listingId: number, listingData: ListingSubmission): Promise<void> => {
+  const { error } = await apiCall(`/listings/${listingId}`, 'PUT', listingData);
+  if (error) {
+    throw new Error(error);
+  }
+};
+
+export const removeListing = async (listingId: number): Promise<void> => {
+  const { error } = await apiCall(`/listings/${listingId}`, 'DELETE');
+  if (error) {
+    throw new Error(error);
+  }
+};
+
+export const publishListing = async (listingId: number, availability: Availability[]): Promise<void> => {
+  const { error } = await apiCall(`/listings/publish/${listingId}`, 'PUT', { availability });
+  if (error) {
+    throw new Error(error);
+  }
+};
+
+export const unpublishListing = async (listingId: number): Promise<void> => {
+  const { error } = await apiCall(`/listings/unpublish/${listingId}`, 'PUT');
+  if (error) {
     throw new Error(error);
   }
 };

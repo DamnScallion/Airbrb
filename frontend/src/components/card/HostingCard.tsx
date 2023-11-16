@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Box, Card, CardActions, CardContent, CardMedia, Button, Typography, useMediaQuery, Rating } from '@mui/material'
 import { Listing, Availability } from 'utils/dataType'
 import { useTheme } from '@mui/material/styles'
@@ -64,10 +64,6 @@ const HostingCard: React.FC<HostingCardProps> = ({ data, onDelete }) => {
       enqueueSnackbar(msg, { variant: 'error' })
     }
   };
-
-  useEffect(() => {
-    console.log('availabilities: ', availabilities)
-  }, [availabilities])
 
   return (
     <Box>

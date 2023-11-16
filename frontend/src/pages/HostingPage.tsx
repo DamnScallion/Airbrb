@@ -26,7 +26,7 @@ const HostingPage: React.FC = () => {
         })
       );
       setListings(detailedListings)
-      console.log(detailedListings)
+      // console.log(detailedListings)
     } catch (error) {
       console.log(getErrorMessage(error))
     }

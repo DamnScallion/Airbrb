@@ -15,6 +15,7 @@ export interface ListingMetadata {
   totalBedNum: number;
   bedrooms: Bedroom[];
   amenities: string[];
+  images?: string[];
 }
 
 export interface ListingSubmission {
@@ -23,6 +24,11 @@ export interface ListingSubmission {
   price: number;
   thumbnail: string;
   metadata: ListingMetadata;
+}
+
+export interface Availability {
+  start: string;
+  end: string;
 }
 
 export interface Listing {
@@ -34,7 +40,7 @@ export interface Listing {
   price: number;
   metadata: ListingMetadata;
   reviews: Array<Record<string, unknown>>;
-  availability?: Array<Record<string, unknown>>; // Only in getListingDetails response
+  availability?: Availability[]; // Only in getListingDetails response
   published?: boolean; // Only in getListingDetails response
   postedOn?: string; // Only in getListingDetails response
 }

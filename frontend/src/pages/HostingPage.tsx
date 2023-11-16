@@ -58,7 +58,7 @@ const HostingPage: React.FC = () => {
           </ButtonGroup>
         </Box>
         {listings && listings.map((listing, index) => (
-          <HostingCard key={index} data={listing} onDelete={handleDeleteListing}/>
+          <HostingCard key={index} data={listing} onDelete={handleDeleteListing} />
         ))}
       </Container>
     </Box>

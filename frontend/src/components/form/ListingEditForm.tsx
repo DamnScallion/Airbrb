@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom'
 import { Box, Container, Grid, Typography, Button, FormControl, InputLabel, OutlinedInput, InputAdornment, Select, SelectChangeEvent, MenuItem, TextField, FormGroup, FormControlLabel, Checkbox, Tooltip, IconButton, ImageListItem, ImageListItemBar, ImageList, Stack } from '@mui/material';
-import { fileToDataUrl, getErrorMessage } from 'utils/helper'
-import { MdNavigateBefore, MdAdd, MdUpload, MdHighlightOff } from 'react-icons/md'
+import { fileToDataUrl, getErrorMessage } from 'utils/helper';
+import { MdNavigateBefore, MdAdd, MdUpload, MdHighlightOff } from 'react-icons/md';
 import { red } from '@mui/material/colors';
-import { addListing } from 'utils/apiService';
+import { getListingDetails, updateListing } from 'utils/apiService';
 import { useSnackbar } from 'notistack';
-import { Bedroom, ListingSubmission, Address } from 'utils/dataType';
+import { Address, Bedroom, ListingSubmission, Listing } from 'utils/dataType';
 
-const ListingCreateForm: React.FC = () => {
+const ListingEditForm: React.FC = () => {
+  const { listingId } = useParams<{ listingId: string }>();
+  const [data, setData] = useState<Partial<Listing>>({})
   const [title, setTitle] = useState('');
   const [street, setStreet] = useState('');
   const [city, setCity] = useState('');
@@ -20,6 +22,35 @@ const ListingCreateForm: React.FC = () => {
   const [amenities, setAmenities] = useState<string[]>([])
   const [thumbnail, setThumbnail] = useState('');
   const [images, setImages] = useState<string[]>([])
+
+  const handleLoadData = async () => {
+    try {
+      if (!listingId) return;
+      const originalData = await getListingDetails(Number(listingId))
+      setData(originalData)
+      setTitle(originalData.title || '');
+      setStreet(originalData.address?.street || '');
+      setCity(originalData.address?.city || '');
+      setCountry(originalData.address?.country || '');
+      setPrice(String(originalData.price) || '');
+      setBathroomNum(String(originalData.metadata?.bathroomNum) || '')
+      setPropertyType(originalData.metadata?.propertyType || '')
+      setBedrooms(originalData.metadata?.bedrooms || [{ bedNum: 0, bedType: '' }])
+      setAmenities(originalData.metadata?.amenities || [])
+      setThumbnail(originalData.thumbnail || '')
+      setImages(originalData.metadata?.images || [])
+    } catch (error) {
+      console.error(getErrorMessage(error))
+    }
+  }
+
+  useEffect(() => {
+    handleLoadData()
+  }, [listingId])
+
+  if (!data) {
+    return <div>Loading...</div>;
+  }
 
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -94,10 +125,9 @@ const ListingCreateForm: React.FC = () => {
     const listingData: ListingSubmission = { title, address, price: Number(price), thumbnail, metadata };
 
     try {
-      const res = await addListing(listingData);
-      console.log('res', res);
+      await updateListing(Number(listingId), listingData);
       navigate('/hosting');
-      enqueueSnackbar('Successfully Created a Listing.', { variant: 'success' });
+      enqueueSnackbar('Successfully Updated the Listing.', { variant: 'success' });
     } catch (error) {
       enqueueSnackbar(getErrorMessage(error), { variant: 'error' });
     }
@@ -372,11 +402,11 @@ const ListingCreateForm: React.FC = () => {
         {/* Form Submit Button */}
         <Stack spacing={2} sx={{ mt: 8, mb: 6 }} direction="row">
           <Button variant='contained' fullWidth size='large' sx={{ my: 4 }} color='inherit' onClick={() => navigate('/hosting')}>Cancel</Button>
-          <Button variant='contained' fullWidth size='large' sx={{ my: 4 }} onClick={handleSubmit}>Submit</Button>
+          <Button variant='contained' fullWidth size='large' sx={{ my: 4 }} onClick={handleSubmit}>Save</Button>
         </Stack>
       </Box>
     </Container>
   )
 }
 
-export default ListingCreateForm
+export default ListingEditForm

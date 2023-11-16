@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import config from 'config.json';
 import { storeToken, storeEmail, clearLocalStorage } from './helper'
-import { ListingSubmission, Listing } from './dataType';
+import { ListingSubmission, Listing, Availability } from './dataType';
 
 const BACKEND_PORT = config.BACKEND_PORT;
 
@@ -102,6 +102,20 @@ export const updateListing = async (listingId: number, listingData: ListingSubmi
 
 export const removeListing = async (listingId: number): Promise<void> => {
   const { error } = await apiCall(`/listings/${listingId}`, 'DELETE');
+  if (error) {
+    throw new Error(error);
+  }
+};
+
+export const publishListing = async (listingId: number, availability: Availability[]): Promise<void> => {
+  const { error } = await apiCall(`/listings/publish/${listingId}`, 'PUT', { availability });
+  if (error) {
+    throw new Error(error);
+  }
+};
+
+export const unpublishListing = async (listingId: number): Promise<void> => {
+  const { error } = await apiCall(`/listings/unpublish/${listingId}`, 'PUT');
   if (error) {
     throw new Error(error);
   }

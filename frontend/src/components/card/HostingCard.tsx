@@ -9,20 +9,12 @@ import { useSnackbar } from 'notistack'
 import { getErrorMessage } from 'utils/helper'
 import { MdOutlineEdit, MdOutlineCheckCircleOutline, MdOutlineRemoveCircleOutline, MdHighlightOff } from 'react-icons/md'
 import ListingPublishDialog from 'components/dialog/ListingPublishDialog'
+import BulletPoint from 'components/common/BulletPoint'
 
 interface HostingCardProps {
   data: Listing;
   onDelete: (listingId: number) => void;
 }
-
-const bull = (
-  <Box
-    component='span'
-    sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
-  >
-    •
-  </Box>
-);
 
 const HostingCard: React.FC<HostingCardProps> = ({ data, onDelete }) => {
   const { id, thumbnail, title, price, reviews, metadata, published } = data
@@ -81,11 +73,11 @@ const HostingCard: React.FC<HostingCardProps> = ({ data, onDelete }) => {
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <Box>
                 <Typography variant='subtitle1' color='text.secondary'>{propertyType}</Typography>
-                <Typography component='legend'>$ {price} (per night)</Typography>
+                <Typography variant='subtitle1' color='text.secondary'>$ {price} (per night)</Typography>
               </Box>
               <Box>
                 <Rating id={`rating-${id}`} value={null} precision={0.5} />
-                <Typography component='legend' sx={{ textAlign: 'end' }}>{reviews.length} Reviews</Typography>
+                <Typography variant='subtitle1' color='text.secondary' sx={{ textAlign: 'end' }}>{reviews.length} Reviews</Typography>
               </Box>
             </Box>
             <Box component='span' sx={{ display: 'inline-flex', alignItems: 'center', mt: 1 }}>
@@ -93,7 +85,7 @@ const HostingCard: React.FC<HostingCardProps> = ({ data, onDelete }) => {
               <Box sx={{ display: 'inline-flex', alignItems: 'center', ml: 0.5 }}>
                 <BiSolidBed />
               </Box>
-              {bull}
+              <BulletPoint />
               {bathroomNum}
               <Box sx={{ display: 'inline-flex', alignItems: 'center', ml: 0.5 }}>
                 <BiSolidBath />

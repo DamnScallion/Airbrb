@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { getAllListings, getListingDetails, removeListing } from 'utils/apiService'
 import { getErrorMessage, getEmail } from 'utils/helper';
 import { Listing } from 'utils/dataType';
-import HostingCard from 'components/card/HostingCard';
+import HostingCard from 'components/card/HostingCard'
+import NavBackButton from 'components/common/NavBackButton';
 import { useSnackbar } from 'notistack';
 
 const HostingPage: React.FC = () => {
@@ -51,7 +52,8 @@ const HostingPage: React.FC = () => {
     <Box>
       <Header showSearchBar={false} pageTitle='Hosted Listings' />
       <Container component='main' maxWidth='md'>
-        <Box sx={{ my: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
+        <NavBackButton route={'/'} />
+        <Box sx={{ mb: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
           <ButtonGroup variant='outlined' aria-label='outlined primary button group'>
             <Button onClick={() => navigate('/listing/create')}>Create Listing</Button>
             <Button>Upload Listing</Button>

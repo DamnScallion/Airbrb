@@ -7,13 +7,15 @@ import { useSnackbar } from 'notistack';
 
 interface HostBookingCardProps {
   data: Booking;
+  refetch: () => void;
+  hasAction?: boolean;
 }
 
-const HostBookingCard: React.FC<HostBookingCardProps> = ({ data }) => {
+const HostBookingCard: React.FC<HostBookingCardProps> = ({ data, refetch, hasAction = true }) => {
   const { id, owner, dateRange, totalPrice, status } = data
   const { start, end } = dateRange
 
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar()
 
   const getChipColor = (status: string) => {
     switch (status) {
@@ -26,13 +28,14 @@ const HostBookingCard: React.FC<HostBookingCardProps> = ({ data }) => {
       default:
         return 'primary'
     }
-  };
+  }
 
   const avatarLetter = owner ? owner[0]?.toUpperCase() : null
 
   const handeAccept = async () => {
     try {
       await acceptBooking(Number(id))
+      refetch()
       enqueueSnackbar('Successfully Accept the Booking Request.', { variant: 'success' })
     } catch (error) {
       enqueueSnackbar(getErrorMessage(error), { variant: 'error' })
@@ -42,6 +45,7 @@ const HostBookingCard: React.FC<HostBookingCardProps> = ({ data }) => {
   const handeReject = async () => {
     try {
       await declineBooking(Number(id))
+      refetch()
       enqueueSnackbar('Successfully Reject the Booking Request.', { variant: 'success' })
     } catch (error) {
       enqueueSnackbar(getErrorMessage(error), { variant: 'error' })
@@ -67,10 +71,12 @@ const HostBookingCard: React.FC<HostBookingCardProps> = ({ data }) => {
             <Typography variant='subtitle1' >Total Price: ${totalPrice}</Typography>
           </Box>
         </CardContent>
-        <CardActions sx={{ display: 'flex', justifyContent: 'end' }}>
+        {hasAction && (
+          <CardActions sx={{ display: 'flex', justifyContent: 'end' }}>
           <Button size='small' variant='outlined' color='error' disabled={status !== 'pending'} onClick={handeReject}>Reject</Button>
           <Button size='small' variant='outlined' disabled={status !== 'pending'} onClick={handeAccept}>Accept</Button>
         </CardActions>
+        )}
       </Card>
     </Box>
   )

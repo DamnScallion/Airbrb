@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom'
 import { Box, Container, Grid, Typography, Button, FormControl, InputLabel, OutlinedInput, InputAdornment, Select, SelectChangeEvent, MenuItem, TextField, FormGroup, FormControlLabel, Checkbox, Tooltip, IconButton, ImageListItem, ImageListItemBar, ImageList, Stack } from '@mui/material';
 import { fileToDataUrl, getErrorMessage } from 'utils/helper';
-import { MdNavigateBefore, MdAdd, MdUpload, MdHighlightOff } from 'react-icons/md';
+import { MdAdd, MdUpload, MdHighlightOff } from 'react-icons/md';
 import { red } from '@mui/material/colors';
 import { getListingDetails, updateListing } from 'utils/apiService';
 import { useSnackbar } from 'notistack';
 import { Address, Bedroom, ListingSubmission, Listing } from 'utils/dataType';
+import NavBackButton from 'components/common/NavBackButton';
 
 const ListingEditForm: React.FC = () => {
   const { listingId } = useParams<{ listingId: string }>();
@@ -164,15 +165,7 @@ const ListingEditForm: React.FC = () => {
 
   return (
     <Container component='main' maxWidth='md'>
-      <Button
-        variant='text'
-        startIcon={<MdNavigateBefore />}
-        size='large'
-        sx={{ mt: 3, pl: 0 }}
-        onClick={() => navigate('/hosting')}
-      >
-        Back
-      </Button>
+      <NavBackButton route={'/hosting'} />
       <Box sx={{ mt: 3, display: 'flex', flexDirection: 'column' }} >
         <Typography variant="h6" sx={{ mb: 2 }}>Listing Title</Typography>
         {/* Listing Title */}

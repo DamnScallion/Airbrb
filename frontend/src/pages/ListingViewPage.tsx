@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Header from 'components/header/Header'
 import ImageSwiper from 'components/common/ImageSwipper'
 import BulletPoint from 'components/common/BulletPoint'
+import NavBackButton from 'components/common/NavBackButton'
 import { Box, Container, Typography, Button, Rating, Grid, Card, CardContent, CardActions, Chip } from '@mui/material'
 import { BiSolidBed, BiSolidBath } from 'react-icons/bi'
 import { MdBedroomParent, MdLocationOn, MdChair } from 'react-icons/md'
@@ -147,6 +148,7 @@ const ListingViewPage: React.FC = () => {
     <Box>
       <Header showSearchBar={false} pageTitle='Listing Details' />
       <Container component='main' maxWidth='md'>
+        <NavBackButton route={'/'} />
         <Box sx={{ mt: 3, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
           <Typography variant='h4' sx={{ mb: 3 }}>{title}</Typography>
 

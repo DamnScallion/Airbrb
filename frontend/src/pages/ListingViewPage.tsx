@@ -240,7 +240,7 @@ const ListingViewPage: React.FC = () => {
               }
             </CardActions>
           </Card>
-          <Box sx={{ my: 2 }}>
+          <Box sx={{ my: 3 }}>
             {bookings && bookings.map((booking, index) => (
               <Chip
                 key={index}

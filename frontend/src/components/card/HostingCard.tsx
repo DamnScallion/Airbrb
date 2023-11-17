@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { unpublishListing } from 'utils/apiService'
 import { useSnackbar } from 'notistack'
 import { getErrorMessage } from 'utils/helper'
-import { MdOutlineEdit, MdOutlineCheckCircleOutline, MdOutlineRemoveCircleOutline, MdHighlightOff } from 'react-icons/md'
+import { MdOutlineEdit, MdOutlineCheckCircleOutline, MdOutlineRemoveCircleOutline, MdHighlightOff, MdOutlineSettings } from 'react-icons/md'
 import ListingPublishDialog from 'components/dialog/ListingPublishDialog'
 import BulletPoint from 'components/common/BulletPoint'
 
@@ -92,9 +92,10 @@ const HostingCard: React.FC<HostingCardProps> = ({ data, onDelete }) => {
               </Box>
             </Box>
           </CardContent>
-          <CardActions sx={{ justifyContent: 'end' }}>
+          <CardActions sx={{ display: 'flex', justifyContent: 'end' }}>
             <Button size='small' color='error' onClick={() => onDelete(Number(id))} variant="outlined" startIcon={<MdHighlightOff />}>Delete</Button>
             <Button size='small' onClick={() => navigate(`/listing/edit/${String(id)}`)} variant="outlined" startIcon={<MdOutlineEdit />}>Edit</Button>
+            <Button size='small' onClick={() => navigate(`/booking/${String(id)}`)} variant="outlined" startIcon={<MdOutlineSettings />}>Booking</Button>
             {isPublish
               ? (
                 <Button size='small' color='inherit' onClick={handleUnpublish} variant="outlined" startIcon={<MdOutlineRemoveCircleOutline />}>UnPublish</Button>

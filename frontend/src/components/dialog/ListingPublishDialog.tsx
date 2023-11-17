@@ -96,7 +96,6 @@ const ListingPublishDialog: React.FC<ListingPublishDialogProps> = ({
     }
     try {
       await publishListing(Number(listingId), availabilities)
-      // setIsPublish(true)
       onPublishSuccess()
       setAvailabilities([{ start: '', end: '' }])
       const msg = 'Listing published successfully!'

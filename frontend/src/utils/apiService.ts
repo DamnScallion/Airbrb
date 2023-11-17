@@ -121,6 +121,10 @@ export const unpublishListing = async (listingId: number): Promise<void> => {
   }
 };
 
+/***************************************************************
+                       Booking Functions
+***************************************************************/
+
 export const makeNewBooking = async (listingId: number, bookingData: BookingCreateData): Promise<number> => {
   const { data, error } = await apiCall(`/bookings/new/${listingId}`, 'POST', bookingData)
   if (data && !error) {
@@ -130,15 +134,25 @@ export const makeNewBooking = async (listingId: number, bookingData: BookingCrea
   }
 };
 
-/***************************************************************
-                       Booking Functions
-***************************************************************/
-
 export const getAllBookings = async (): Promise<Booking[]> => {
   const { data, error } = await apiCall('/bookings', 'GET')
   if (data && !error) {
     return data.bookings as Booking[]
   } else {
     throw new Error(error)
+  }
+};
+
+export const acceptBooking = async (bookingId: number): Promise<void> => {
+  const { error } = await apiCall(`/bookings/accept/${bookingId}`, 'PUT');
+  if (error) {
+    throw new Error(error);
+  }
+};
+
+export const declineBooking = async (bookingId: number): Promise<void> => {
+  const { error } = await apiCall(`/bookings/decline/${bookingId}`, 'PUT');
+  if (error) {
+    throw new Error(error);
   }
 };

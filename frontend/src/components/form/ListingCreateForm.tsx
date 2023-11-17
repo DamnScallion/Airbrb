@@ -86,6 +86,35 @@ const ListingCreateForm: React.FC = () => {
   const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
+    if (!title.trim()) {
+      enqueueSnackbar('Please enter a title for the listing.', { variant: 'error' })
+      return
+    }
+    if (!street.trim() || !city.trim() || !country.trim()) {
+      enqueueSnackbar('Please complete the address information.', { variant: 'error' })
+      return
+    }
+    if (!price.trim() || Number(price) <= 0) {
+      enqueueSnackbar('Please enter a valid price.', { variant: 'error' })
+      return
+    }
+    if (!bathroomNum.trim() || Number(bathroomNum) <= 0) {
+      enqueueSnackbar('Please enter the number of bathrooms.', { variant: 'error' })
+      return
+    }
+    if (!propertyType.trim()) {
+      enqueueSnackbar('Please select a property type.', { variant: 'error' })
+      return
+    }
+    if (bedrooms.some(bedroom => bedroom.bedNum <= 0 || !bedroom.bedType.trim())) {
+      enqueueSnackbar('Please complete the bedroom details.', { variant: 'error' })
+      return
+    }
+    if (!thumbnail.trim()) {
+      enqueueSnackbar('Please upload a thumbnail image.', { variant: 'error' })
+      return
+    }
+
     const totalBedNum = bedrooms.reduce((acc, curr) => acc + Number(curr.bedNum), 0);
 
     const address: Address = { street, city, country };

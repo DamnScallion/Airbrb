@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import config from 'config.json';
 import { storeToken, storeEmail, clearLocalStorage } from './helper'
-import { ListingSubmission, Listing, Availability } from './dataType';
+import { ListingSubmission, Listing, Availability, BookingCreateData, Booking } from './dataType';
 
 const BACKEND_PORT = config.BACKEND_PORT;
 
@@ -15,14 +15,14 @@ export const apiCall = async (url: string, method: string, body?: any) => {
       },
       body: JSON.stringify(body),
     });
-    const data = await response.json();
+    const data = await response.json()
     if (response.ok) {
-      return { data };
+      return { data }
     } else {
-      throw new Error(data.error);
+      throw new Error(data.error)
     }
   } catch (error: any) {
-    return { error: error.message };
+    return { error: error.message }
   }
 };
 
@@ -31,34 +31,34 @@ export const apiCall = async (url: string, method: string, body?: any) => {
 ***************************************************************/
 
 export const login = async (email: string, password: string) => {
-  const { data, error } = await apiCall('/user/auth/login', 'POST', { email, password });
+  const { data, error } = await apiCall('/user/auth/login', 'POST', { email, password })
   if (data && !error) {
-    storeToken(data.token);
-    storeEmail(email);
-    return true;
+    storeToken(data.token)
+    storeEmail(email)
+    return true
   } else {
-    throw new Error(error);
+    throw new Error(error)
   }
 };
 
 export const logout = async () => {
   const { error } = await apiCall('/user/auth/logout', 'POST');
   if (!error) {
-    clearLocalStorage();
-    return true;
+    clearLocalStorage()
+    return true
   } else {
-    throw new Error(error);
+    throw new Error(error)
   }
 };
 
 export const register = async (email: string, password: string, name: string) => {
-  const { data, error } = await apiCall('/user/auth/register', 'POST', { email, password, name });
+  const { data, error } = await apiCall('/user/auth/register', 'POST', { email, password, name })
   if (data && !error) {
-    storeToken(data.token);
-    storeEmail(email);
-    return true;
+    storeToken(data.token)
+    storeEmail(email)
+    return true
   } else {
-    throw new Error(error);
+    throw new Error(error)
   }
 };
 
@@ -67,56 +67,78 @@ export const register = async (email: string, password: string, name: string) =>
 ***************************************************************/
 
 export const getAllListings = async (): Promise<Listing[]> => {
-  const { data, error } = await apiCall('/listings', 'GET');
+  const { data, error } = await apiCall('/listings', 'GET')
   if (data && !error) {
-    return data.listings as Listing[];
+    return data.listings as Listing[]
   } else {
-    throw new Error(error);
+    throw new Error(error)
   }
 };
 
 export const getListingDetails = async (listingId: string | number): Promise<Listing> => {
-  const { data, error } = await apiCall(`/listings/${listingId}`, 'GET');
+  const { data, error } = await apiCall(`/listings/${listingId}`, 'GET')
   if (data && !error) {
-    return data.listing as Listing;
+    return data.listing as Listing
   } else {
-    throw new Error(error);
+    throw new Error(error)
   }
 };
 
 export const addListing = async (listingData: ListingSubmission): Promise<any> => {
-  const { data, error } = await apiCall('/listings/new', 'POST', listingData);
+  const { data, error } = await apiCall('/listings/new', 'POST', listingData)
   if (data && !error) {
-    return data;
+    return data
   } else {
-    throw new Error(error);
+    throw new Error(error)
   }
 };
 
 export const updateListing = async (listingId: number, listingData: ListingSubmission): Promise<void> => {
-  const { error } = await apiCall(`/listings/${listingId}`, 'PUT', listingData);
+  const { error } = await apiCall(`/listings/${listingId}`, 'PUT', listingData)
   if (error) {
-    throw new Error(error);
+    throw new Error(error)
   }
 };
 
 export const removeListing = async (listingId: number): Promise<void> => {
-  const { error } = await apiCall(`/listings/${listingId}`, 'DELETE');
+  const { error } = await apiCall(`/listings/${listingId}`, 'DELETE')
   if (error) {
-    throw new Error(error);
+    throw new Error(error)
   }
 };
 
 export const publishListing = async (listingId: number, availability: Availability[]): Promise<void> => {
-  const { error } = await apiCall(`/listings/publish/${listingId}`, 'PUT', { availability });
+  const { error } = await apiCall(`/listings/publish/${listingId}`, 'PUT', { availability })
   if (error) {
-    throw new Error(error);
+    throw new Error(error)
   }
 };
 
 export const unpublishListing = async (listingId: number): Promise<void> => {
   const { error } = await apiCall(`/listings/unpublish/${listingId}`, 'PUT');
   if (error) {
-    throw new Error(error);
+    throw new Error(error)
+  }
+};
+
+export const makeNewBooking = async (listingId: number, bookingData: BookingCreateData): Promise<number> => {
+  const { data, error } = await apiCall(`/bookings/new/${listingId}`, 'POST', bookingData)
+  if (data && !error) {
+    return data.bookingId
+  } else {
+    throw new Error(error)
+  }
+};
+
+/***************************************************************
+                       Booking Functions
+***************************************************************/
+
+export const getAllBookings = async (): Promise<Booking[]> => {
+  const { data, error } = await apiCall('/bookings', 'GET')
+  if (data && !error) {
+    return data.bookings as Booking[]
+  } else {
+    throw new Error(error)
   }
 };

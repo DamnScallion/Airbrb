@@ -2,23 +2,35 @@ import React, { useState, useEffect } from 'react'
 import Header from 'components/header/Header'
 import ImageSwiper from 'components/common/ImageSwipper'
 import BulletPoint from 'components/common/BulletPoint'
-import { Box, Container, Typography, Button, Rating, Grid, Card, CardContent, CardActions } from '@mui/material'
+import { Box, Container, Typography, Button, Rating, Grid, Card, CardContent, CardActions, Chip } from '@mui/material'
 import { BiSolidBed, BiSolidBath } from 'react-icons/bi'
 import { MdBedroomParent, MdLocationOn, MdChair } from 'react-icons/md'
 import { useParams } from 'react-router-dom'
-import { getListingDetails } from 'utils/apiService'
+import { getListingDetails, makeNewBooking, getAllBookings } from 'utils/apiService'
 import { getErrorMessage, getEmail } from 'utils/helper'
-import { Listing } from 'utils/dataType'
+import { Listing, Availability, Booking } from 'utils/dataType'
 import { useAuth } from 'contexts/AuthProvider'
+import { useSnackbar } from 'notistack';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
+
+dayjs.extend(isSameOrAfter)
+dayjs.extend(isSameOrBefore)
 
 const ListingViewPage: React.FC = () => {
   const { listingId } = useParams<{ listingId: string }>()
   const [data, setData] = useState<Partial<Listing>>({})
   const [images, setImages] = useState<string[]>([])
+  const [start, setStart] = useState<string | null>(null)
+  const [end, setEnd] = useState<string | null>(null)
+  const [availabilities, setAvailabilities] = useState<Availability[]>([{ start: '', end: '' }])
+  const [bookings, setBookings] = useState<Booking[]>([])
 
   const { isLoggedIn } = useAuth();
+  const { enqueueSnackbar } = useSnackbar()
 
   const handleFetchData = async () => {
     try {
@@ -26,7 +38,7 @@ const ListingViewPage: React.FC = () => {
       const listing = await getListingDetails(Number(listingId))
       setData(listing)
       setImages([listing.thumbnail, ...(listing.metadata?.images || [])])
-      console.log('listing', listing)
+      setAvailabilities(listing.availability || [{ start: '', end: '' }])
     } catch (error) {
       console.error(getErrorMessage(error))
     }
@@ -36,8 +48,95 @@ const ListingViewPage: React.FC = () => {
     handleFetchData()
   }, [])
 
+  const handleStartDate = (start: string | null) => {
+    const newStart = dayjs(start).format('MM/DD/YYYY')
+    setStart(newStart)
+  };
+  const handleEndDate = (end: string | null) => {
+    const newEnd = dayjs(end).format('MM/DD/YYYY')
+    setEnd(newEnd)
+  };
+
+  const isDateAvailable = (date: string | null) => {
+    return availabilities.some(av => {
+      const startDate = dayjs(av.start, 'MM/DD/YYYY');
+      const endDate = dayjs(av.end, 'MM/DD/YYYY');
+      const currDate = dayjs(date, 'MM/DD/YYYY')
+      return currDate.isSameOrAfter(startDate) && currDate.isSameOrBefore(endDate)
+    })
+  };
+
+  const handleMakeBooking = async () => {
+    if (!start || !end) {
+      enqueueSnackbar('Please select both start and end dates.', { variant: 'error' })
+      return
+    }
+
+    const startDate = dayjs(start, 'MM/DD/YYYY');
+    const endDate = dayjs(end, 'MM/DD/YYYY');
+    if (!endDate.isAfter(startDate)) {
+      enqueueSnackbar('End date must be after start date.', { variant: 'error' })
+      return
+    }
+
+    if (!isDateAvailable(start) || !isDateAvailable(end)) {
+      enqueueSnackbar('Selected dates must be within available dates.', { variant: 'error' })
+      return
+    }
+
+    const dayCount = endDate.diff(startDate, 'day')
+    const totalPrice = dayCount * Number(price)
+
+    const bookingData = {
+      dateRange: {
+        start: startDate.format('MM/DD/YYYY'),
+        end: endDate.format('MM/DD/YYYY')
+      },
+      totalPrice
+    };
+
+    try {
+      await makeNewBooking(Number(listingId), bookingData)
+      enqueueSnackbar('Booking successful!', { variant: 'success' })
+      fetchBookings()
+    } catch (error) {
+      enqueueSnackbar(getErrorMessage(error), { variant: 'error' })
+    }
+  }
+
+  const getChipColor = (status: string) => {
+    switch (status) {
+      case 'pending':
+        return 'secondary'
+      case 'accepted':
+        return 'success'
+      case 'declined':
+        return 'error'
+      default:
+        return 'primary'
+    }
+  };
+
+  const fetchBookings = async () => {
+    try {
+      const allBookings = await getAllBookings();
+      const filteredBookings = allBookings.filter(booking =>
+        booking.owner === getEmail() && Number(booking.listingId) === Number(listingId)
+      );
+      setBookings(filteredBookings);
+    } catch (error) {
+      enqueueSnackbar(getErrorMessage(error), { variant: 'error' })
+    }
+  };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchBookings()
+    }
+  }, [isLoggedIn, listingId])
+
   if (!data || !data.metadata) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
 
   const { title, owner, address, price, metadata, reviews } = data
@@ -108,18 +207,22 @@ const ListingViewPage: React.FC = () => {
             <CardContent sx={{ display: 'flex', alignItems: 'center' }}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DesktopDatePicker
-                  label='Start'
-                  // value={item.start}
+                  label='Check In'
+                  value={start}
                   format='MM/DD/YYYY'
-                  // onChange={(newValue) => handleStartDate(newValue)}
+                  onChange={(newValue) => handleStartDate(newValue)}
+                  shouldDisableDate={(date) => !isDateAvailable(date)}
+                  disabled={!isLoggedIn || owner === getEmail()}
                   disablePast
                 />
                 <Typography sx={{ mx: 2 }}>-</Typography>
                 <DesktopDatePicker
-                  label='End'
-                  // value={item.end}
+                  label='Check Out'
+                  value={end}
                   format='MM/DD/YYYY'
-                  // onChange={(newValue) => handleEndDate(newValue)}
+                  onChange={(newValue) => handleEndDate(newValue)}
+                  shouldDisableDate={(date) => !isDateAvailable(date)}
+                  disabled={!isLoggedIn || owner === getEmail()}
                   disablePast
                 />
               </LocalizationProvider>
@@ -128,15 +231,26 @@ const ListingViewPage: React.FC = () => {
               {(!isLoggedIn || owner === getEmail())
                 ? (
                   <Button variant='contained' fullWidth disabled>
-                    {owner === getEmail() ? 'Your own property' : 'Book'}
+                    {owner === getEmail() ? 'Your own property' : 'Login to book this property'}
                   </Button>
                   )
                 : (
-                  <Button variant='contained' fullWidth>Book</Button>
+                  <Button variant='contained' fullWidth onClick={handleMakeBooking}>Book</Button>
                   )
               }
             </CardActions>
           </Card>
+          <Box sx={{ my: 2 }}>
+            {bookings && bookings.map((booking, index) => (
+              <Chip
+                key={index}
+                label={booking.status}
+                color={getChipColor(booking.status)}
+                variant='outlined'
+                sx={{ mr: 1 }}
+              />
+            ))}
+          </Box>
         </Box>
       </Container>
     </Box>

@@ -5,6 +5,7 @@ import RegisterPage from 'pages/RegisterPage';
 import HostingPage from 'pages/HostingPage';
 import ListingCreatePage from 'pages/ListingCreatePage';
 import ListingEditPage from 'pages/ListingEditPage';
+import ListingViewPage from 'pages/ListingViewPage';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from 'contexts/AuthProvider';
 import { MessageProvider } from 'contexts/MessageProvider'
@@ -20,6 +21,7 @@ const App: React.FC = () => {
           <Route path='/hosting' element={<HostingPage />} />
           <Route path='/listing/create' element={<ListingCreatePage />} />
           <Route path='/listing/edit/:listingId' element={<ListingEditPage />} />
+          <Route path='/listing/:listingId' element={<ListingViewPage />} />
         </Routes>
       </MessageProvider>
     </AuthProvider>

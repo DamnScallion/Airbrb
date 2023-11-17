@@ -30,7 +30,6 @@ const ListingPublishDialog: React.FC<ListingPublishDialogProps> = ({
   listingId,
   onPublishSuccess
 }) => {
-  // ... move related functions from HostingCard here
   const { enqueueSnackbar } = useSnackbar()
 
   const handleStartDate = (index: number, start: string | null) => {

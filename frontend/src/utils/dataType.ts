@@ -44,3 +44,17 @@ export interface Listing {
   published?: boolean; // Only in getListingDetails response
   postedOn?: string; // Only in getListingDetails response
 }
+
+export interface BookingCreateData {
+  dateRange: Availability;
+  totalPrice: number;
+}
+
+export interface Booking {
+  id: number;
+  listingId: number;
+  owner: string;
+  dateRange: Availability;
+  totalPrice: number;
+  status: string;
+}

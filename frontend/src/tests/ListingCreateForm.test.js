@@ -33,19 +33,14 @@ describe('ListingCreateForm', () => {
 
     fireEvent.change(screen.getByLabelText(/title/i), { target: { value: 'Test Listing' } });
     // Simulate changes for other form fields
-
     fireEvent.click(screen.getByText(/add bedroom/i));
-
     // Simulate other changes for bedroom details
-
     fireEvent.click(screen.getByText(/submit/i));
-
     // Wait for the asynchronous code inside handleSubmit to complete
     await waitFor(() => {
       // Assert that addListing is called with the correct data
       expect(mockAddListing).toHaveBeenCalledWith(expect.objectContaining({
         title: 'Test Listing',
-        // Add other expected data
       }));
     });
   });

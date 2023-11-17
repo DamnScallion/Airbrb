@@ -10,7 +10,7 @@ interface HostBookingCardProps {
 }
 
 const HostBookingCard: React.FC<HostBookingCardProps> = ({ data }) => {
-  const { id, listingId, owner, dateRange, totalPrice, status } = data
+  const { id, owner, dateRange, totalPrice, status } = data
   const { start, end } = dateRange
 
   const { enqueueSnackbar } = useSnackbar();
@@ -33,8 +33,18 @@ const HostBookingCard: React.FC<HostBookingCardProps> = ({ data }) => {
   const handeAccept = async () => {
     try {
       await acceptBooking(Number(id))
+      enqueueSnackbar('Successfully Accept the Booking Request.', { variant: 'success' })
     } catch (error) {
-      console.error(getErrorMessage(error))
+      enqueueSnackbar(getErrorMessage(error), { variant: 'error' })
+    }
+  }
+
+  const handeReject = async () => {
+    try {
+      await declineBooking(Number(id))
+      enqueueSnackbar('Successfully Reject the Booking Request.', { variant: 'success' })
+    } catch (error) {
+      enqueueSnackbar(getErrorMessage(error), { variant: 'error' })
     }
   }
 
@@ -58,8 +68,8 @@ const HostBookingCard: React.FC<HostBookingCardProps> = ({ data }) => {
           </Box>
         </CardContent>
         <CardActions sx={{ display: 'flex', justifyContent: 'end' }}>
-          <Button size='small' variant='outlined' color='error' disabled={status !== 'pending'}>Reject</Button>
-          <Button size='small' variant='outlined' disabled={status !== 'pending'}>Accept</Button>
+          <Button size='small' variant='outlined' color='error' disabled={status !== 'pending'} onClick={handeReject}>Reject</Button>
+          <Button size='small' variant='outlined' disabled={status !== 'pending'} onClick={handeAccept}>Accept</Button>
         </CardActions>
       </Card>
     </Box>

@@ -3,7 +3,7 @@ import { Box, Container, Tabs, Tab, Typography } from '@mui/material'
 import { useParams } from 'react-router-dom'
 import Header from 'components/header/Header'
 import HostBookingCard from 'components/card/HostBookingCard'
-import { Listing, Booking } from 'utils/dataType'
+import { Booking } from 'utils/dataType'
 import { getListingDetails, getAllBookings } from 'utils/apiService'
 import { getErrorMessage } from 'utils/helper'
 
@@ -11,7 +11,7 @@ const HostBookingPage: React.FC = () => {
   const { listingId } = useParams<{ listingId: string }>()
   const [title, setTitle] = useState<string>('')
   const [tab, setTab] = useState<string>('Requests');
-  const [listing, setListing] = useState<Partial<Listing>>({})
+  // const [listing, setListing] = useState<Partial<Listing>>({})
   const [bookings, setBookings] = useState<Booking[]>([])
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -23,7 +23,7 @@ const HostBookingPage: React.FC = () => {
     try {
       if (!listingId) return;
       const details = await getListingDetails(Number(listingId))
-      setListing(details)
+      // setListing(details)
       setTitle(details.title)
     } catch (error) {
       console.error(getErrorMessage(error))

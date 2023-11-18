@@ -3,12 +3,14 @@ import Header from 'components/header/Header'
 import ImageSwiper from 'components/common/ImageSwipper'
 import BulletPoint from 'components/common/BulletPoint'
 import NavBackButton from 'components/common/NavBackButton'
-import { Box, Container, Typography, Button, Rating, Grid, Card, CardContent, CardActions, Chip } from '@mui/material'
+import WriteReviewDialog from 'components/dialog/WriteReviewDialog'
+import ReviewList from 'components/list/ReviewList'
+import { Box, Container, Typography, Button, Grid, Card, CardContent, CardActions, Chip, Tabs, Tab } from '@mui/material'
 import { BiSolidBed, BiSolidBath } from 'react-icons/bi'
-import { MdBedroomParent, MdLocationOn, MdChair } from 'react-icons/md'
+import { MdBedroomParent, MdLocationOn, MdChair, MdGrade } from 'react-icons/md'
 import { useParams } from 'react-router-dom'
 import { getListingDetails, makeNewBooking, getAllBookings } from 'utils/apiService'
-import { getErrorMessage, getEmail } from 'utils/helper'
+import { getErrorMessage, getEmail, calcAverageRating } from 'utils/helper'
 import { Listing, Availability, Booking } from 'utils/dataType'
 import { useAuth } from 'contexts/AuthProvider'
 import { useSnackbar } from 'notistack';
@@ -29,11 +31,14 @@ const ListingViewPage: React.FC = () => {
   const [end, setEnd] = useState<string | null>(null)
   const [availabilities, setAvailabilities] = useState<Availability[]>([{ start: '', end: '' }])
   const [bookings, setBookings] = useState<Booking[]>([])
+  const [acceptedBookings, setAcceptedBookings] = useState<Booking[]>([])
+  const [tab, setTab] = useState<string>('Booking')
+  const [open, setOpen] = useState<boolean>(false)
 
   const { isLoggedIn } = useAuth();
   const { enqueueSnackbar } = useSnackbar()
 
-  const handleFetchData = async () => {
+  const fetchListing = async () => {
     try {
       if (!listingId) return;
       const listing = await getListingDetails(Number(listingId))
@@ -46,8 +51,21 @@ const ListingViewPage: React.FC = () => {
   }
 
   useEffect(() => {
-    handleFetchData()
+    fetchListing()
   }, [])
+
+  const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
+    event.preventDefault()
+    setTab(newValue)
+  }
+
+  const handleOpen = () => {
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+  }
 
   const handleStartDate = (start: string | null) => {
     const newStart = dayjs(start).format('MM/DD/YYYY')
@@ -99,7 +117,10 @@ const ListingViewPage: React.FC = () => {
     try {
       await makeNewBooking(Number(listingId), bookingData)
       enqueueSnackbar('Booking successful!', { variant: 'success' })
+      setStart(null)
+      setEnd(null)
       fetchBookings()
+      fetchListing()
     } catch (error) {
       enqueueSnackbar(getErrorMessage(error), { variant: 'error' })
     }
@@ -124,7 +145,9 @@ const ListingViewPage: React.FC = () => {
       const filteredBookings = allBookings.filter(booking =>
         booking.owner === getEmail() && Number(booking.listingId) === Number(listingId)
       );
-      setBookings(filteredBookings);
+      const acceptedBooks = filteredBookings.filter(booking => booking.status === 'accepted')
+      setBookings(filteredBookings)
+      setAcceptedBookings(acceptedBooks)
     } catch (error) {
       enqueueSnackbar(getErrorMessage(error), { variant: 'error' })
     }
@@ -199,60 +222,80 @@ const ListingViewPage: React.FC = () => {
             ))}
           </Grid>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', mt: 3 }}>
-            <Rating id={`rating-${listingId}`} value={null} precision={0.5} />
-            <Typography variant='subtitle1' sx={{ ml: 3 }}>{reviews?.length} Reviews</Typography>
-          </Box>
+          <Tabs value={tab} onChange={handleTabChange} aria-label='Booking and Reviews Tab panel' sx={{ mt: 3 }}>
+            <Tab value='Booking' label='Booking' />
+            <Tab value='Reviews' label='Reviews' />
+          </Tabs>
 
-          <Card sx={{ minWidth: 380, mt: 4 }}>
-            <Typography variant='h5' sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>$ {price} per night</Typography>
-            <CardContent sx={{ display: 'flex', alignItems: 'center' }}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DesktopDatePicker
-                  label='Check In'
-                  value={start}
-                  format='MM/DD/YYYY'
-                  onChange={(newValue) => handleStartDate(newValue)}
-                  shouldDisableDate={(date) => !isDateAvailable(date)}
-                  disabled={!isLoggedIn || owner === getEmail()}
-                  disablePast
-                />
-                <Typography sx={{ mx: 2 }}>-</Typography>
-                <DesktopDatePicker
-                  label='Check Out'
-                  value={end}
-                  format='MM/DD/YYYY'
-                  onChange={(newValue) => handleEndDate(newValue)}
-                  shouldDisableDate={(date) => !isDateAvailable(date)}
-                  disabled={!isLoggedIn || owner === getEmail()}
-                  disablePast
-                />
-              </LocalizationProvider>
-            </CardContent>
-            <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
-              {(!isLoggedIn || owner === getEmail())
-                ? (
-                  <Button variant='contained' fullWidth disabled>
-                    {owner === getEmail() ? 'Your own property' : 'Login to book this property'}
-                  </Button>
-                  )
-                : (
-                  <Button variant='contained' fullWidth onClick={handleMakeBooking}>Book</Button>
-                  )
-              }
-            </CardActions>
-          </Card>
-          <Box sx={{ my: 3 }}>
-            {bookings && bookings.map((booking, index) => (
-              <Chip
-                key={index}
-                label={booking.status}
-                color={getChipColor(booking.status)}
-                variant='outlined'
-                sx={{ mr: 1 }}
-              />
-            ))}
-          </Box>
+          {tab === 'Booking' && (
+            <Box>
+              {bookings.length !== 0 && (
+                <Box sx={{ display: 'inline-flex', mt: 3 }}>
+                  <Typography variant='subtitle1' sx={{ mr: 2 }}>Booking Status: </Typography>
+                  {bookings.map((booking, index) => (
+                    <Chip
+                      key={index}
+                      label={booking.status}
+                      color={getChipColor(booking.status)}
+                      variant='outlined'
+                      sx={{ mr: 1 }}
+                    />
+                  ))}
+                </Box>
+              )}
+              <Card sx={{ minWidth: 380, my: 4 }}>
+                <Typography variant='h5' sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>$ {price} per night</Typography>
+                <CardContent sx={{ display: 'flex', alignItems: 'center' }}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DesktopDatePicker
+                      label='Check In'
+                      value={start}
+                      format='MM/DD/YYYY'
+                      onChange={(newValue) => handleStartDate(newValue)}
+                      shouldDisableDate={(date) => !isDateAvailable(date)}
+                      disabled={!isLoggedIn || owner === getEmail()}
+                      disablePast
+                    />
+                    <Typography sx={{ mx: 2 }}>-</Typography>
+                    <DesktopDatePicker
+                      label='Check Out'
+                      value={end}
+                      format='MM/DD/YYYY'
+                      onChange={(newValue) => handleEndDate(newValue)}
+                      shouldDisableDate={(date) => !isDateAvailable(date)}
+                      disabled={!isLoggedIn || owner === getEmail()}
+                      disablePast
+                    />
+                  </LocalizationProvider>
+                </CardContent>
+                <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
+                  {(!isLoggedIn || owner === getEmail())
+                    ? (
+                      <Button variant='contained' fullWidth disabled>
+                        {owner === getEmail() ? 'Your own property' : 'Login to book this property'}
+                      </Button>
+                      )
+                    : (
+                      <Button variant='contained' fullWidth onClick={handleMakeBooking}>Book</Button>
+                      )
+                  }
+                </CardActions>
+              </Card>
+            </Box>
+          )}
+          {tab === 'Reviews' && (
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <Box sx={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', my: 3 }}>
+                <MdGrade size={24} />
+                <Typography variant='subtitle1' sx={{ ml: 0.5, mr: 1 }}>{calcAverageRating(reviews)}</Typography>
+                <BulletPoint />
+                <Typography variant='subtitle1' sx={{ ml: 1 }}>{reviews?.length} Reviews</Typography>
+              </Box>
+              {isLoggedIn && owner !== getEmail() && acceptedBookings.length !== 0 && <Button variant='contained' sx={{ maxWidth: 380 }} onClick={handleOpen}>Leave A Review</Button>}
+              <WriteReviewDialog open={open} handleClose={handleClose} listingId={Number(listingId)} bookings={bookings} refech={fetchListing} />
+              {reviews && <ReviewList reviews={reviews} />}
+            </Box>
+          )}
         </Box>
       </Container>
     </Box>

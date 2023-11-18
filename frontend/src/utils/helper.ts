@@ -1,3 +1,5 @@
+import { Review } from './dataType';
+
 // Local Storage Management
 export const storeToken = (token: string) => localStorage.setItem('token', token);
 export const getToken = () => localStorage.getItem('token');
@@ -39,3 +41,12 @@ export const fileToDataUrl = (file: File): Promise<string> => {
   reader.readAsDataURL(file);
   return dataUrlPromise;
 }
+
+export const calcAverageRating = (reviews: Review[] | undefined) => {
+  if (!reviews || reviews.length === 0) {
+    return 0;
+  }
+  const totalRating = reviews.reduce((acc, review) => acc + review.rate, 0);
+  const averageRating = totalRating / reviews.length;
+  return averageRating.toFixed(1)
+};

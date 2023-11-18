@@ -6,7 +6,7 @@ import { BiSolidBed, BiSolidBath } from 'react-icons/bi'
 import { useNavigate } from 'react-router-dom'
 import { unpublishListing } from 'utils/apiService'
 import { useSnackbar } from 'notistack'
-import { getErrorMessage } from 'utils/helper'
+import { getErrorMessage, calcAverageRating } from 'utils/helper'
 import { MdOutlineEdit, MdOutlineCheckCircleOutline, MdOutlineRemoveCircleOutline, MdHighlightOff, MdOutlineSettings } from 'react-icons/md'
 import ListingPublishDialog from 'components/dialog/ListingPublishDialog'
 import BulletPoint from 'components/common/BulletPoint'
@@ -76,7 +76,7 @@ const HostingCard: React.FC<HostingCardProps> = ({ data, onDelete }) => {
                 <Typography variant='subtitle1' color='text.secondary'>$ {price} (per night)</Typography>
               </Box>
               <Box>
-                <Rating id={`rating-${id}`} value={null} precision={0.5} />
+                <Rating id={`rating-${id}`} value={Number(calcAverageRating(reviews))} precision={0.5} />
                 <Typography variant='subtitle1' color='text.secondary' sx={{ textAlign: 'end' }}>{reviews.length} Reviews</Typography>
               </Box>
             </Box>

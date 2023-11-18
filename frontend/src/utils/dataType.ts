@@ -31,6 +31,13 @@ export interface Availability {
   end: string;
 }
 
+export interface Review {
+  owner: string;
+  text: string;
+  rate: number;
+  postedOn: string;
+}
+
 export interface Listing {
   id?: number; // Only in getAllListings response
   title: string;
@@ -39,7 +46,7 @@ export interface Listing {
   thumbnail: string;
   price: number;
   metadata: ListingMetadata;
-  reviews: Array<Record<string, unknown>>;
+  reviews: Review[];
   availability?: Availability[]; // Only in getListingDetails response
   published?: boolean; // Only in getListingDetails response
   postedOn?: string; // Only in getListingDetails response

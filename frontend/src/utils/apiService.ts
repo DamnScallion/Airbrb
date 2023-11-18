@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import config from 'config.json';
 import { storeToken, storeEmail, clearLocalStorage } from './helper'
-import { ListingSubmission, Listing, Availability, BookingCreateData, Booking } from './dataType';
+import { ListingSubmission, Listing, Availability, BookingCreateData, Booking, Review } from './dataType';
 
 const BACKEND_PORT = config.BACKEND_PORT;
 
@@ -115,7 +115,14 @@ export const publishListing = async (listingId: number, availability: Availabili
 };
 
 export const unpublishListing = async (listingId: number): Promise<void> => {
-  const { error } = await apiCall(`/listings/unpublish/${listingId}`, 'PUT');
+  const { error } = await apiCall(`/listings/unpublish/${listingId}`, 'PUT')
+  if (error) {
+    throw new Error(error)
+  }
+};
+
+export const leaveListingReview = async (listingId: number, bookingId: number, reviewData: Review): Promise<void> => {
+  const { error } = await apiCall(`/listings/${listingId}/review/${bookingId}`, 'PUT', { review: reviewData })
   if (error) {
     throw new Error(error)
   }
@@ -156,3 +163,10 @@ export const declineBooking = async (bookingId: number): Promise<void> => {
     throw new Error(error);
   }
 };
+
+export const removeBooking = async (bookingId: number): Promise<void> => {
+  const { error } = await apiCall(`/bookings/${bookingId}`, 'DELETE');
+  if (error) {
+    throw new Error(error);
+  }
+}

@@ -4,6 +4,7 @@ import { Listing } from 'utils/dataType'
 import { BiSolidBed, BiSolidBath } from 'react-icons/bi'
 import { useNavigate } from 'react-router-dom'
 import BulletPoint from 'components/common/BulletPoint'
+import { calcAverageRating } from 'utils/helper'
 
 interface IndexCardProps {
   data: Listing;
@@ -15,7 +16,7 @@ const IndexCard: React.FC<IndexCardProps> = ({ data }) => {
   const navigate = useNavigate()
 
   return (
-    <Card sx={{ maxWidth: 500 }} onClick={() => navigate(`/listing/${String(id)}`)}>
+    <Card onClick={() => navigate(`/listing/${String(id)}`)}>
       <CardActionArea>
         <CardMedia
           component='img'
@@ -34,7 +35,7 @@ const IndexCard: React.FC<IndexCardProps> = ({ data }) => {
               <Typography variant='subtitle1' color='text.secondary'>$ {price} (per night)</Typography>
             </Box>
             <Box>
-              <Rating id={`rating-${id}`} size='small' value={null} precision={0.5} />
+              <Rating id={`rating-${id}`} size='small' value={Number(calcAverageRating(reviews))} precision={0.5} />
               <Typography variant='subtitle1' color='text.secondary' sx={{ textAlign: 'end' }}>{reviews.length} Reviews</Typography>
             </Box>
           </Box>

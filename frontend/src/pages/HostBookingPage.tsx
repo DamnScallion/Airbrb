@@ -12,7 +12,7 @@ import { getErrorMessage } from 'utils/helper'
 const HostBookingPage: React.FC = () => {
   const { listingId } = useParams<{ listingId: string }>()
   const [title, setTitle] = useState<string>('')
-  const [tab, setTab] = useState<string>('Requests');
+  const [tab, setTab] = useState<string>('Requests')
   const [publishDate, setPublishDate] = useState<string>('')
   const [requestBookings, setRequestBookings] = useState<Booking[]>([])
   const [historyBookings, setHistoryBookings] = useState<Booking[]>([])

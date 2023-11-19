@@ -44,7 +44,6 @@ const WriteReviewDialog: React.FC<WriteReviewDialogProps> = ({ open, handleClose
       enqueueSnackbar('Review submitted successfully', { variant: 'success' })
       handleClose()
       refech()
-      console.log('reviewData: ', reviewData)
     } catch (error) {
       enqueueSnackbar(getErrorMessage(error), { variant: 'error' })
     }

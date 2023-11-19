@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import Header from 'components/header/Header'
-import IndexCard from 'components/card/IndexCard';
-import { Listing, Booking } from 'utils/dataType';
+import IndexCard from 'components/card/IndexCard'
+import { Listing, Booking } from 'utils/dataType'
 import { Box, Container, Grid, Tabs, Tab, TextField, Slider, Typography, Button, ButtonGroup } from '@mui/material'
 import { getAllListings, getListingDetails, getAllBookings } from 'utils/apiService'
-import { getErrorMessage, getEmail, calcAverageRating } from 'utils/helper';
+import { getErrorMessage, getEmail, calcAverageRating } from 'utils/helper'
 import { useAuth } from 'contexts/AuthProvider'
 import { MdSearch, MdTextFields, MdBedroomParent, MdDateRange, MdAttachMoney, MdGrade, MdOutlineTrendingDown, MdOutlineTrendingUp } from 'react-icons/md'
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers'
@@ -61,34 +61,34 @@ const IndexPage: React.FC = () => {
   }
 
   const filterByBedrooms = () => {
-    const [minBedrooms, maxBedrooms] = bedroomRange as [number, number]; // Type assertion
+    const [minBedrooms, maxBedrooms] = bedroomRange as [number, number]
     const filtered = searchLisings.filter(listing =>
       listing.metadata.bedrooms.length >= minBedrooms &&
       listing.metadata.bedrooms.length <= maxBedrooms
     );
-    setListings(filtered);
-  };
+    setListings(filtered)
+  }
 
   const filterByDates = () => {
     const filtered = searchLisings.filter(listing => {
       return listing.availability?.some(avail => {
-        const startDate = dayjs(avail.start, 'MM/DD/YYYY');
-        const endDate = dayjs(avail.end, 'MM/DD/YYYY');
+        const startDate = dayjs(avail.start, 'MM/DD/YYYY')
+        const endDate = dayjs(avail.end, 'MM/DD/YYYY')
         return dayjs(start).isBetween(startDate, endDate, null, '[]') &&
-          dayjs(end).isBetween(startDate, endDate, null, '[]');
-      });
-    });
-    setListings(filtered);
-  };
+          dayjs(end).isBetween(startDate, endDate, null, '[]')
+      })
+    })
+    setListings(filtered)
+  }
 
   const filterByPrices = () => {
-    const [minPrice, maxPrice] = priceRange as [number, number]; // Type assertion
+    const [minPrice, maxPrice] = priceRange as [number, number]
     const filtered = searchLisings.filter(listing =>
       listing.price >= minPrice &&
       listing.price <= maxPrice
-    );
-    setListings(filtered);
-  };
+    )
+    setListings(filtered)
+  }
 
   const sortRatingsDesc = () => {
     const sorted = [...searchLisings].sort((a, b) =>
@@ -116,17 +116,15 @@ const IndexPage: React.FC = () => {
   const getPublishedListings = async () => {
     try {
       const fetchedListings = await getAllListings()
-      let userBookings: Booking[] = [];
+      let userBookings: Booking[] = []
 
       if (isLoggedIn) {
         const allBookings = await getAllBookings()
         userBookings = allBookings.filter(booking =>
           booking.owner === getEmail() &&
           (booking.status === 'accepted' || booking.status === 'pending')
-        );
+        )
       }
-
-      console.log('userBookings: ', userBookings)
 
       const detailedListingsPromises = fetchedListings.map(async (listing) => {
         const details = await getListingDetails(Number(listing.id))
@@ -138,7 +136,7 @@ const IndexPage: React.FC = () => {
 
       const priorListings = publishedListings.filter(listing =>
         userBookings.some(booking => Number(booking.listingId) === Number(listing.id))
-      );
+      )
 
       const remainListings = publishedListings.filter(listing =>
         !userBookings.some(booking => Number(booking.listingId) === Number(listing.id))
@@ -150,11 +148,11 @@ const IndexPage: React.FC = () => {
     } catch (error) {
       console.log(getErrorMessage(error))
     }
-  };
+  }
 
   useEffect(() => {
-    getPublishedListings();
-  }, [isLoggedIn]);
+    getPublishedListings()
+  }, [isLoggedIn])
 
   return (
     <Box>

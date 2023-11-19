@@ -1,20 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Container, ButtonGroup, Button } from '@mui/material';
-import Header from 'components/header/Header';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import { Box, Container, ButtonGroup, Button } from '@mui/material'
+import Header from 'components/header/Header'
+import ListingUploadDialog from 'components/dialog/ListingUploadDialog'
+import { useNavigate } from 'react-router-dom'
 import { getAllListings, getListingDetails, removeListing } from 'utils/apiService'
-import { getErrorMessage, getEmail } from 'utils/helper';
-import { Listing } from 'utils/dataType';
+import { getErrorMessage, getEmail } from 'utils/helper'
+import { Listing } from 'utils/dataType'
 import HostingCard from 'components/card/HostingCard'
-import NavBackButton from 'components/common/NavBackButton';
-import { useSnackbar } from 'notistack';
+import NavBackButton from 'components/common/NavBackButton'
+import { useSnackbar } from 'notistack'
+import { MdAdd, MdUploadFile } from 'react-icons/md'
 
 const HostingPage: React.FC = () => {
-  const [listings, setListings] = useState<Listing[]>([]);
+  const [listings, setListings] = useState<Listing[]>([])
+  const [open, setOpen] = useState<boolean>(false)
 
-  const userEmail = getEmail();
-  const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
+  const userEmail = getEmail()
+  const navigate = useNavigate()
+  const { enqueueSnackbar } = useSnackbar()
+
+  const handleOpen = () => {
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+  }
 
   const getHostedListings = async () => {
     try {
@@ -23,21 +34,20 @@ const HostingPage: React.FC = () => {
       const detailedListings = await Promise.all(
         hostedListings.map(async (listing) => {
           const details = await getListingDetails(Number(listing.id));
-          return { ...listing, ...details };
+          return { ...listing, ...details }
         })
       );
       setListings(detailedListings)
-      // console.log(detailedListings)
     } catch (error) {
-      console.log(getErrorMessage(error))
+      console.error(getErrorMessage(error))
     }
   }
 
   const handleDeleteListing = async (listingId: number) => {
     try {
-      await removeListing(listingId);
-      setListings(prevListings => prevListings.filter(listing => listing.id !== listingId));
-      enqueueSnackbar('Successfully Deleted a Listing.', { variant: 'success' });
+      await removeListing(listingId)
+      setListings(prevListings => prevListings.filter(listing => listing.id !== listingId))
+      enqueueSnackbar('Successfully Deleted a Listing.', { variant: 'success' })
     } catch (error) {
       const msg = getErrorMessage(error)
       enqueueSnackbar(msg, { variant: 'error' })
@@ -55,13 +65,14 @@ const HostingPage: React.FC = () => {
         <NavBackButton route={'/'} />
         <Box sx={{ mb: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
           <ButtonGroup variant='outlined' aria-label='outlined primary button group'>
-            <Button onClick={() => navigate('/listing/create')}>Create Listing</Button>
-            <Button>Upload Listing</Button>
+            <Button onClick={() => navigate('/listing/create')} startIcon={<MdAdd size={24}/>}>Create Listing</Button>
+            <Button onClick={handleOpen} startIcon={<MdUploadFile size={24}/>}>Upload Listing</Button>
           </ButtonGroup>
         </Box>
         {listings && listings.map((listing, index) => (
           <HostingCard key={index} data={listing} onDelete={handleDeleteListing} />
         ))}
+        <ListingUploadDialog open={open} handleClose={handleClose} refetch={getHostedListings} />
       </Container>
     </Box>
   );

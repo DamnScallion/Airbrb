@@ -1,8 +1,8 @@
 {
-  "title": "sample street",
+  "title": "Sample Hotel",
   "address": {
-    "street": "sample street",
-    "city": "sample city",
+    "street": "Sample Street",
+    "city": "Sample City",
     "country": "AU"
   },
   "price": 200,

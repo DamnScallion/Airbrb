@@ -3,11 +3,11 @@ import { Box, Card, CardActions, CardContent, CardMedia, Button, Typography, use
 import { Listing, Availability } from 'utils/dataType'
 import { useTheme } from '@mui/material/styles'
 import { BiSolidBed, BiSolidBath } from 'react-icons/bi'
+import { MdBedroomParent, MdOutlineEdit, MdOutlineCheckCircleOutline, MdOutlineRemoveCircleOutline, MdHighlightOff, MdOutlineSettings } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
 import { unpublishListing } from 'utils/apiService'
 import { useSnackbar } from 'notistack'
 import { getErrorMessage, calcAverageRating } from 'utils/helper'
-import { MdOutlineEdit, MdOutlineCheckCircleOutline, MdOutlineRemoveCircleOutline, MdHighlightOff, MdOutlineSettings } from 'react-icons/md'
 import ListingPublishDialog from 'components/dialog/ListingPublishDialog'
 import BulletPoint from 'components/common/BulletPoint'
 
@@ -18,7 +18,7 @@ interface HostingCardProps {
 
 const HostingCard: React.FC<HostingCardProps> = ({ data, onDelete }) => {
   const { id, thumbnail, title, price, reviews, metadata, published } = data
-  const { propertyType, totalBedNum, bathroomNum } = metadata
+  const { propertyType, bedrooms, totalBedNum, bathroomNum } = metadata
 
   const [isPublish, setIsPublish] = useState(published)
   const [availabilities, setAvailabilities] = useState<Availability[]>([{ start: '', end: '' }])
@@ -81,6 +81,11 @@ const HostingCard: React.FC<HostingCardProps> = ({ data, onDelete }) => {
               </Box>
             </Box>
             <Box component='span' sx={{ display: 'inline-flex', alignItems: 'center', mt: 1 }}>
+              {bedrooms?.length}
+               <Box sx={{ display: 'inline-flex', alignItems: 'center', ml: 0.5 }}>
+                <MdBedroomParent />
+              </Box>
+              <BulletPoint />
               {totalBedNum}
               <Box sx={{ display: 'inline-flex', alignItems: 'center', ml: 0.5 }}>
                 <BiSolidBed />

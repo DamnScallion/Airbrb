@@ -56,7 +56,6 @@ describe('happy path', () => {
 
   it('3. Updates the thumbnail and title of the listing successfully', () => {
     cy.get('button[name="EditListingLinkBtn"]').should('be.visible').click()
-    // cy.get('button[name="EditListingLinkBtn"]').click()
     cy.url().should('include', `localhost:${FRONTEND_PORT}/listing/edit`)
     cy.get('input[name="Title"]').focus().clear().type('Updated Home Title')
     cy.get('#thumbnail-label').selectFile('src/assets/sample-house-2.jpeg')
@@ -155,5 +154,14 @@ describe('happy path', () => {
     cy.contains('pending')
     cy.get('#AirbnbLogo').should('be.visible').click()
     cy.contains('Booked')
+  })
+
+  it('Logs out of the application successfully', () => {
+    cy.get('#navbar-button').should('be.visible').click()
+    cy.get('[data-testid="LogoutMenuItem"]').should('be.visible').click()
+    cy.wait(1000)
+    cy.clearAllLocalStorage()
+    cy.contains('Landing Page')
+    cy.get('button[name="headerLoginBtn"]').should('be.visible')
   })
 })

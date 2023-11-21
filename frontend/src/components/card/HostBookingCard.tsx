@@ -73,8 +73,8 @@ const HostBookingCard: React.FC<HostBookingCardProps> = ({ data, refetch, hasAct
         </CardContent>
         {hasAction && (
           <CardActions sx={{ display: 'flex', justifyContent: 'end' }}>
-          <Button size='small' variant='outlined' color='error' disabled={status !== 'pending'} onClick={handeReject}>Reject</Button>
-          <Button size='small' variant='outlined' disabled={status !== 'pending'} onClick={handeAccept}>Accept</Button>
+          <Button size='small' variant='outlined' color='error' disabled={status !== 'pending'} onClick={handeReject} name='BookingRejectBtn'>Reject</Button>
+          <Button size='small' variant='outlined' disabled={status !== 'pending'} onClick={handeAccept} name='BookingAcceptBtn'>Accept</Button>
         </CardActions>
         )}
       </Card>

@@ -160,16 +160,16 @@ const IndexPage: React.FC = () => {
       <Container component='main' maxWidth='lg'>
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <Tabs value={tab} onChange={handleTabChange} aria-label='Search Tab panel' sx={{ my: 3 }} scrollButtons allowScrollButtonsMobile variant='scrollable'>
-            <Tab value='Keyword' label='Keyword' icon={<MdTextFields size={24}/>} iconPosition='start'/>
-            <Tab value='Bedrooms' label='Bedrooms' icon={<MdBedroomParent size={24}/>} iconPosition='start'/>
-            <Tab value='Dates' label='Dates' icon={<MdDateRange size={24}/>} iconPosition='start'/>
-            <Tab value='Prices' label='Prices' icon={<MdAttachMoney size={24}/>} iconPosition='start'/>
-            <Tab value='Ratings' label='Ratings' icon={<MdGrade size={24}/>} iconPosition='start'/>
+            <Tab id='tab-keyword' value='Keyword' label='Keyword' icon={<MdTextFields size={24}/>} iconPosition='start'/>
+            <Tab id='tab-bedroom' value='Bedrooms' label='Bedrooms' icon={<MdBedroomParent size={24}/>} iconPosition='start'/>
+            <Tab id='tab-date' value='Dates' label='Dates' icon={<MdDateRange size={24}/>} iconPosition='start'/>
+            <Tab id='tab-price' value='Prices' label='Prices' icon={<MdAttachMoney size={24}/>} iconPosition='start'/>
+            <Tab id='tab-rating' value='Ratings' label='Ratings' icon={<MdGrade size={24}/>} iconPosition='start'/>
           </Tabs>
         </Box>
         {tab === 'Keyword' && (
           <Box sx={{ display: 'flex', justifyContent: 'center', height: '40px' }}>
-            <TextField value={keyword} fullWidth label='Title/City' sx={{ maxWidth: 'sm' }} size='small' onChange={handlekeywordChange} />
+            <TextField name='keyword-input' value={keyword} fullWidth label='Title/City' sx={{ maxWidth: 'sm' }} size='small' onChange={handlekeywordChange} />
             <Button id='search-by-keyword' variant='contained' sx={{ ml: 2, textAlign: 'center' }} size='small' onClick={filterByKeyword}><MdSearch size={24} /></Button>
             <Button id='reset-keyword' variant='outlined' sx={{ ml: 2, textAlign: 'center' }} size='small' onClick={handleReset}>Reset</Button>
           </Box>

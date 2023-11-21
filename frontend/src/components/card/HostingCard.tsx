@@ -100,7 +100,7 @@ const HostingCard: React.FC<HostingCardProps> = ({ data, onDelete }) => {
           <CardActions sx={{ display: 'flex', justifyContent: 'end' }}>
             <Button size='small' color='error' onClick={() => onDelete(Number(id))} variant="outlined" startIcon={<MdHighlightOff />} name='DeleteListingBtn'>Delete</Button>
             <Button size='small' onClick={() => navigate(`/listing/edit/${String(id)}`)} variant="outlined" startIcon={<MdOutlineEdit />} name='EditListingLinkBtn'>Edit</Button>
-            <Button size='small' onClick={() => navigate(`/booking/${String(id)}`)} variant="outlined" startIcon={<MdOutlineSettings />} name='BookingLinkBtn'>Booking</Button>
+            <Button size='small' onClick={() => navigate(`/booking/${String(id)}`)} variant="outlined" startIcon={<MdOutlineSettings />} name={`BookingLinkBtn-${title}`}>Booking</Button>
             {isPublish
               ? (
                 <Button size='small' color='inherit' onClick={handleUnpublish} variant="outlined" startIcon={<MdOutlineRemoveCircleOutline />} name='UnPublishListingBtn'>UnPublish</Button>

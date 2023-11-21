@@ -14,7 +14,7 @@ const ReviewList: React.FC<ReviewListProps> = ({ reviews }) => {
   return (
     <List sx={{ width: '100%', maxWidth: 'md' }}>
       {reversedReviews.map((review, index) => (
-        <Box key={index}>
+        <Box key={index} data-testid='review-list-item'>
           <ListItem alignItems="flex-start">
             <ListItemAvatar>
               <Avatar alt='Reviewer Avatar'>{getAvatar(review.owner)}</Avatar>

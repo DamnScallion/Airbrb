@@ -18,7 +18,7 @@ const IndexCard: React.FC<IndexCardProps> = ({ data, isBooked }) => {
   const navigate = useNavigate()
 
   return (
-    <Card onClick={() => navigate(`/listing/${String(id)}`)}>
+    <Card onClick={() => navigate(`/listing/${String(id)}`)} data-testid='index-card'>
       <CardActionArea>
         <CardMedia
           component='img'

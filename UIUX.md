@@ -1,0 +1,8 @@
+### 1. Fully utilize Material UI to make sure UI Consitant
+### 2. Propper message popup for user interaction with the APP
+### 3. New users can be automatically logged into the system upon successful registration, without needing to enter the login page to input their username and password.
+### 4. After you successfully log in, your name will be displayed on a button in the top right corner, letting you know which account you are logged into and confirming its correctness.
+### 5. The system incorporates detailed handling in certain aspects. For example, when creating a listing and selecting dates, host users cannot choose past dates, and the start date must be set before the end date. Additionally, when guest users select dates for booking, their chosen dates must fall within the date range set by the host user. This ensures that the date selection process is logical and aligns with the availability of the listings.
+### 6. Beautify the rendering interface to ensure that the pages are neat and aesthetically pleasing, thereby enhancing the user's visual experience.
+### 7. When a guest user filters listings based on their requirements, if they have new criteria, they can simply click the reset button to clear the filter selections and start over with a fresh choice.
+### 8. The information displayed in each listing is:Title, Thumbnail of property (or video if advanced), Number of total reviews. On top of the previously mentioned details, additional information such as price, number of bedrooms, and number of bathrooms, etc.

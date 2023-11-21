@@ -223,8 +223,8 @@ const ListingViewPage: React.FC = () => {
           </Grid>
 
           <Tabs value={tab} onChange={handleTabChange} aria-label='Booking and Reviews Tab panel' sx={{ mt: 3 }}>
-            <Tab value='Booking' label='Booking' />
-            <Tab value='Reviews' label='Reviews' />
+            <Tab id='tab-booking' value='Booking' label='Booking' />
+            <Tab id='tab-review' value='Reviews' label='Reviews' />
           </Tabs>
 
           {tab === 'Booking' && (
@@ -291,7 +291,7 @@ const ListingViewPage: React.FC = () => {
                 <BulletPoint />
                 <Typography variant='subtitle1' sx={{ ml: 1 }}>{reviews?.length} Reviews</Typography>
               </Box>
-              {isLoggedIn && owner !== getEmail() && acceptedBookings.length !== 0 && <Button variant='contained' sx={{ maxWidth: 380 }} onClick={handleOpen}>Leave A Review</Button>}
+              {isLoggedIn && owner !== getEmail() && acceptedBookings.length !== 0 && <Button variant='contained' sx={{ maxWidth: 380 }} onClick={handleOpen} name='OpenWriteReviewDialog'>Leave A Review</Button>}
               <WriteReviewDialog open={open} handleClose={handleClose} listingId={Number(listingId)} bookings={bookings} refech={fetchListing} />
               {reviews && <ReviewList reviews={reviews} />}
             </Box>

@@ -75,13 +75,13 @@ const NavBar: React.FC = () => {
                 }}
                 sx={{ borderRadius: 20 }}
               >
-                <MenuItem onClick={() => { navigate('/hosting') }}>Hosted Listing</MenuItem>
-                <MenuItem onClick={() => handleLogout()}>Logout</MenuItem>
+                <MenuItem onClick={() => { navigate('/hosting') }} data-testid='HostedListingMenuItem'>Hosted Listing</MenuItem>
+                <MenuItem onClick={() => handleLogout()} data-testid='LogoutMenuItem'>Logout</MenuItem>
               </Menu>
             </>
           )
         : (
-            <Button variant="contained" onClick={ () => { navigate('/login') } }>Login</Button>
+            <Button name='headerLoginBtn' variant="contained" onClick={ () => { navigate('/login') } }>Login</Button>
           )
       }
     </Box>

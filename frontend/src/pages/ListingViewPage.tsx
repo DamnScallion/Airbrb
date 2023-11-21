@@ -276,7 +276,7 @@ const ListingViewPage: React.FC = () => {
                       </Button>
                       )
                     : (
-                      <Button variant='contained' fullWidth onClick={handleMakeBooking}>Book</Button>
+                      <Button variant='contained' fullWidth onClick={handleMakeBooking} name='BookBtn'>Book</Button>
                       )
                   }
                 </CardActions>

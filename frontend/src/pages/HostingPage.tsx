@@ -65,8 +65,8 @@ const HostingPage: React.FC = () => {
         <NavBackButton route={'/'} />
         <Box sx={{ mb: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
           <ButtonGroup variant='outlined' aria-label='outlined primary button group'>
-            <Button onClick={() => navigate('/listing/create')} startIcon={<MdAdd size={24}/>}>Create Listing</Button>
-            <Button onClick={handleOpen} startIcon={<MdUploadFile size={24}/>}>Upload Listing</Button>
+            <Button onClick={() => navigate('/listing/create')} startIcon={<MdAdd size={24}/>} name='CreateListingLinkBtn'>Create Listing</Button>
+            <Button onClick={handleOpen} startIcon={<MdUploadFile size={24}/>} name='UploadListingOpenBtn'>Upload Listing</Button>
           </ButtonGroup>
         </Box>
         {listings && listings.map((listing, index) => (

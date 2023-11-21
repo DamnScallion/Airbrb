@@ -91,6 +91,7 @@ const RegisterForm: React.FC = () => {
       />
       <Button
         type='submit'
+        name='submit'
         fullWidth
         variant='contained'
         sx={{ my: 2 }}
@@ -100,7 +101,7 @@ const RegisterForm: React.FC = () => {
       </Button>
       <Typography textAlign='center'>
         Already have an account?{' '}
-        <Link component={RouterLink} to='/login' variant='body2' underline="hover">
+        <Link component={RouterLink} to='/login' variant='body2' underline='hover' data-testid='loginLink'>
           Login here
         </Link>
       </Typography>

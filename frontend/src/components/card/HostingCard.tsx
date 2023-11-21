@@ -98,15 +98,15 @@ const HostingCard: React.FC<HostingCardProps> = ({ data, onDelete }) => {
             </Box>
           </CardContent>
           <CardActions sx={{ display: 'flex', justifyContent: 'end' }}>
-            <Button size='small' color='error' onClick={() => onDelete(Number(id))} variant="outlined" startIcon={<MdHighlightOff />}>Delete</Button>
-            <Button size='small' onClick={() => navigate(`/listing/edit/${String(id)}`)} variant="outlined" startIcon={<MdOutlineEdit />}>Edit</Button>
-            <Button size='small' onClick={() => navigate(`/booking/${String(id)}`)} variant="outlined" startIcon={<MdOutlineSettings />}>Booking</Button>
+            <Button size='small' color='error' onClick={() => onDelete(Number(id))} variant="outlined" startIcon={<MdHighlightOff />} name='DeleteListingBtn'>Delete</Button>
+            <Button size='small' onClick={() => navigate(`/listing/edit/${String(id)}`)} variant="outlined" startIcon={<MdOutlineEdit />} name='EditListingLinkBtn'>Edit</Button>
+            <Button size='small' onClick={() => navigate(`/booking/${String(id)}`)} variant="outlined" startIcon={<MdOutlineSettings />} name='BookingLinkBtn'>Booking</Button>
             {isPublish
               ? (
-                <Button size='small' color='inherit' onClick={handleUnpublish} variant="outlined" startIcon={<MdOutlineRemoveCircleOutline />}>UnPublish</Button>
+                <Button size='small' color='inherit' onClick={handleUnpublish} variant="outlined" startIcon={<MdOutlineRemoveCircleOutline />} name='UnPublishListingBtn'>UnPublish</Button>
                 )
               : (
-                <Button size='small' color='success' onClick={handleOpenDialog} variant="outlined" startIcon={<MdOutlineCheckCircleOutline />}>Publish</Button>
+                <Button size='small' color='success' onClick={handleOpenDialog} variant="outlined" startIcon={<MdOutlineCheckCircleOutline />} name='OpenPublishDialogBtn'>Publish</Button>
                 )
             }
           </CardActions>

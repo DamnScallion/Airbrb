@@ -142,7 +142,7 @@ const ListingPublishDialog: React.FC<ListingPublishDialogProps> = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} variant='outlined' color='inherit'>Cancel</Button>
-        <Button onClick={handlePublish} color='success' variant='outlined' startIcon={<MdOutlineCheckCircleOutline />}>Go Live</Button>
+        <Button onClick={handlePublish} color='success' variant='outlined' startIcon={<MdOutlineCheckCircleOutline />} name='submit'>Go Live</Button>
       </DialogActions>
     </Dialog>
   );

@@ -1,47 +1,118 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom';
+import { SnackbarProvider } from 'notistack';
 import ListingCreateForm from 'components/form/ListingCreateForm';
-import * as apiService from 'utils/apiService';
+import { addListing } from 'utils/apiService'
 
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: jest.fn(),
+// Mock the addListing function
+jest.mock('utils/apiService', () => ({
+  addListing: jest.fn()
 }));
-jest.mock('notistack', () => ({
-  ...jest.requireActual('notistack'),
-  useSnackbar: () => ({
-    enqueueSnackbar: jest.fn(),
-  }),
-}));
-jest.mock('utils/helper', () => ({
-  ...jest.requireActual('utils/helper'),
-  fileToDataUrl: jest.fn(),
-  getErrorMessage: jest.fn(),
-}));
+
+const mockAddListing = addListing;
 
 describe('ListingCreateForm', () => {
-  it('renders ListingCreateForm with form elements', () => {
-    render(<ListingCreateForm />);
-    expect(screen.getByLabelText(/title/i)).toBeInTheDocument();
-    // Add assertions for other form elements
+  beforeEach(() => {
+    mockAddListing.mockClear();
   });
 
-  it('handles form submission', async () => {
-    const mockAddListing = jest.spyOn(apiService, 'addListing').mockResolvedValue({});
+  const renderComponent = () => render(
+    <SnackbarProvider>
+      <MemoryRouter>
+        <ListingCreateForm />
+      </MemoryRouter>
+    </SnackbarProvider>
+  );
 
-    render(<ListingCreateForm />);
+  it('renders the form', () => {
+    renderComponent();
+  });
 
-    fireEvent.change(screen.getByLabelText(/title/i), { target: { value: 'Test Listing' } });
-    // Simulate changes for other form fields
-    fireEvent.click(screen.getByText(/add bedroom/i));
-    // Simulate other changes for bedroom details
-    fireEvent.click(screen.getByText(/submit/i));
-    // Wait for the asynchronous code inside handleSubmit to complete
-    await waitFor(() => {
-      // Assert that addListing is called with the correct data
-      expect(mockAddListing).toHaveBeenCalledWith(expect.objectContaining({
-        title: 'Test Listing',
-      }));
-    });
+  it('renders form elements correctly', () => {
+    renderComponent();
+
+    expect(screen.getByLabelText(/title/i)).toBeInTheDocument();
+
+    expect(screen.getByLabelText(/street/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/city/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/country/i)).toBeInTheDocument();
+
+    expect(screen.getByLabelText(/price \(per night\)/i)).toBeInTheDocument();
+
+    expect(screen.getByLabelText(/number of bathrooms/i)).toBeInTheDocument();
+
+    expect(screen.getByText(/bedroom details/i)).toBeInTheDocument();
+
+    expect(screen.getByText(/amenities/i)).toBeInTheDocument();
+
+    expect(screen.getByText(/upload thumbnail/i)).toBeInTheDocument();
+
+    expect(screen.getByText(/upload image/i)).toBeInTheDocument();
+
+    expect(screen.getByRole('button', { name: /submit/i })).toBeInTheDocument();
+  });
+
+  it('allows typing some fields input', () => {
+    renderComponent();
+
+    const titleInput = screen.getByLabelText(/title/i);
+    userEvent.type(titleInput, 'Test Title');
+    expect(titleInput.value).toBe('Test Title');
+
+    const streetInput = screen.getByLabelText(/street/i);
+    userEvent.type(streetInput, '123 Test Street');
+    expect(streetInput.value).toBe('123 Test Street');
+
+    const cityInput = screen.getByLabelText(/city/i);
+    userEvent.type(cityInput, 'Test City');
+    expect(cityInput.value).toBe('Test City');
+
+    const countryInput = screen.getByLabelText(/country/i);
+    userEvent.type(countryInput, 'Test Country');
+    expect(countryInput.value).toBe('Test Country');
+
+    const priceInput = screen.getByLabelText(/price \(per night\)/i);
+    userEvent.type(priceInput, '100');
+    expect(priceInput.value).toBe('100');
+
+    const bathroomNumInput = screen.getByLabelText(/number of bathrooms/i);
+    userEvent.type(bathroomNumInput, '2');
+    expect(bathroomNumInput.value).toBe('2');
+  });
+
+  it('successfully calls addListing with prepared data', async () => {
+    const listingData = {
+      title: 'Sample Hotel',
+      address: {
+        street: 'Sample Street',
+        city: 'Sample City',
+        country: 'AU'
+      },
+      price: 200,
+      thumbnail: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
+      metadata: {
+        bathroomNum: 2,
+        propertyType: 'Hotel',
+        totalBedNum: 3,
+        bedrooms: [
+          { bedNum: 1, bedType: 'King' },
+          { bedNum: 2, bedType: 'Queen' }
+        ],
+        amenities: ['Wi-Fi', 'TV', 'kitchen']
+      }
+    };
+
+    const mockedResponse = { listingId: Math.floor(Math.random() * 1000000) };
+    mockAddListing.mockResolvedValue(mockedResponse);
+    const response = await addListing(listingData);
+
+    // Verify if addListing was called correctly
+    expect(mockAddListing).toHaveBeenCalledWith(listingData);
+
+    // Validate the response
+    expect(response).toHaveProperty('listingId');
+    expect(typeof response.listingId).toBe('number');
   });
 });

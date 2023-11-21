@@ -142,6 +142,7 @@ const ListingCreateForm: React.FC = () => {
         <TextField
           required
           label="Title"
+          name='Title'
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           fullWidth
@@ -155,6 +156,7 @@ const ListingCreateForm: React.FC = () => {
             <TextField
               required
               label="Street"
+              name='Street'
               value={street}
               onChange={(e) => setStreet(e.target.value)}
               fullWidth
@@ -166,6 +168,7 @@ const ListingCreateForm: React.FC = () => {
             <TextField
               required
               label="City"
+              name='City'
               value={city}
               onChange={(e) => setCity(e.target.value)}
               fullWidth
@@ -177,6 +180,7 @@ const ListingCreateForm: React.FC = () => {
             <TextField
               required
               label="Country"
+              name='Country'
               value={country}
               onChange={(e) => setCountry(e.target.value)}
               fullWidth
@@ -195,6 +199,7 @@ const ListingCreateForm: React.FC = () => {
                 type="number"
                 startAdornment={<InputAdornment position="start">$</InputAdornment>}
                 label="Price (per night)"
+                name='Price'
                 value={price}
                 onChange={(e) => Number(e.target.value) < 0 ? setPrice('0') : setPrice(e.target.value)}
               />
@@ -206,6 +211,7 @@ const ListingCreateForm: React.FC = () => {
             <TextField
               required
               label="Number of Bathrooms"
+              name='Bathrooms'
               type="number"
               value={bathroomNum}
               onChange={(e) => setBathroomNum(e.target.value)}
@@ -245,6 +251,7 @@ const ListingCreateForm: React.FC = () => {
                 <TextField
                   required
                   label="Number of Beds"
+                  name='NumberOfBeds'
                   type="number"
                   value={bedroom.bedNum}
                   onChange={(e) => Number(e.target.value) < 0 ? handleBedroomChange(index, 'bedNum', 0) : handleBedroomChange(index, 'bedNum', e.target.value)}
@@ -393,8 +400,8 @@ const ListingCreateForm: React.FC = () => {
 
         {/* Form Submit Button */}
         <Stack spacing={2} sx={{ mt: 8, mb: 6 }} direction="row">
-          <Button variant='contained' fullWidth size='large' sx={{ my: 4 }} color='inherit' onClick={() => navigate('/hosting')}>Cancel</Button>
-          <Button variant='contained' fullWidth size='large' sx={{ my: 4 }} onClick={handleSubmit}>Submit</Button>
+          <Button variant='contained' fullWidth size='large' sx={{ my: 4 }} color='inherit' onClick={() => navigate('/hosting')} name='close'>Cancel</Button>
+          <Button variant='contained' fullWidth size='large' sx={{ my: 4 }} onClick={handleSubmit} name='submit'>Submit</Button>
         </Stack>
       </Box>
     </Container>
